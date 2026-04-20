@@ -27,7 +27,20 @@ const server = http.createServer((req, res) => {
     let safePath = urlPath;
     if (safePath === '/' || safePath === '') safePath = '/index.html';
 
-    const filePath = path.normalize(path.join(__dirname, safePath));
+    // 明确映射 /show 路径到仓库的 show 目录，保持对其它路径的原有支持
+    let filePath;
+    if (safePath === '/show' || safePath === '/show/') {
+      filePath = path.normalize(path.join(__dirname, 'show'));
+    } else if (safePath.startsWith('/show/')) {
+      const rel = safePath.replace(/^\/show\//, '');
+      filePath = path.normalize(path.join(__dirname, 'show', rel));
+    } else if (safePath.startsWith('/assets/')) {
+      // 可选别名：/assets/* -> show/*
+      const rel = safePath.replace(/^\/assets\//, '');
+      filePath = path.normalize(path.join(__dirname, 'show', rel));
+    } else {
+      filePath = path.normalize(path.join(__dirname, safePath));
+    }
 
     // 防止目录遍历
     if (!filePath.startsWith(path.normalize(__dirname + path.sep))) {
@@ -38,8 +51,19 @@ const server = http.createServer((req, res) => {
 
     fs.stat(filePath, (err, stats) => {
       if (err) {
-        res.writeHead(404);
-        res.end('文件不存在');
+        // 如果原路径不存在，尝试在 `show` 目录下查找相同路径的文件
+        const altPath = path.normalize(path.join(__dirname, 'show', safePath.replace(/^\//, '')));
+        fs.stat(altPath, (altErr, altStats) => {
+          if (!altErr && altStats && altStats.isFile()) {
+            const extAlt = path.extname(altPath).toLowerCase();
+            const contentTypeAlt = contentTypes[extAlt] || 'application/octet-stream';
+            res.writeHead(200, { 'Content-Type': contentTypeAlt });
+            fs.createReadStream(altPath).pipe(res);
+            return;
+          }
+          res.writeHead(404);
+          res.end('文件不存在');
+        });
         return;
       }
 
