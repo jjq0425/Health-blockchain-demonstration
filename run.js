@@ -70,7 +70,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-// 启动服务，端口 3000
-server.listen(3000, () => {
-  console.log('服务器已启动：http://localhost:3000');
+// 启动服务，端口 13733
+server.listen(13733, () => {
+  console.log('服务器已启动：http://localhost:13733');
 });
