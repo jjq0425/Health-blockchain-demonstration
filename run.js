@@ -120,7 +120,7 @@ const server = http.createServer(async (req, res) => {
         res.setHeader('Accept-Ranges', 'bytes');
         res.setHeader('ETag', etag);
         res.setHeader('Last-Modified', lastModified);
-        res.setHeader('Cache-Control', 'public, max-age=3600');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
 
         // If-None-Match -> 304 (仅当非 Range 请求)
         const inm = req.headers['if-none-match'];
