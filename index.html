@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>现场演示目录</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f172a;
+      --panel: rgba(15, 23, 42, 0.88);
+      --panel-soft: rgba(30, 41, 59, 0.82);
+      --line: rgba(148, 163, 184, 0.2);
+      --text: #e2e8f0;
+      --text-soft: #94a3b8;
+      --accent: #38bdf8;
+      --accent-strong: #0ea5e9;
+      --accent-soft: rgba(56, 189, 248, 0.16);
+      --danger: #ef4444;
+      --shadow: 0 20px 45px rgba(15, 23, 42, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(14, 165, 233, 0.12), transparent 24%),
+        var(--bg);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      padding: 24px 20px;
+      border-right: 1px solid var(--line);
+      background: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(16px);
+      overflow-y: auto;
+    }
+
+    .content {
+      padding: 24px;
+      overflow: auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .sidebar-header {
+      margin-bottom: 20px;
+    }
+
+    .sidebar-header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-header p,
+    .hint,
+    .meta-line {
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .toolbar {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .toolbar-note {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .toolbar-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    button,
+    .item-button {
+      border: 1px solid transparent;
+      border-radius: 14px;
+      background: var(--panel-soft);
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    button {
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    button:hover,
+    .item-button:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.9), rgba(37, 99, 235, 0.9));
+    }
+
+    .danger {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.24);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--panel-soft);
+    }
+
+    .toggle-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    .catalog {
+      display: grid;
+      gap: 14px;
+    }
+
+    .section {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section-header h3 {
+      font-size: 16px;
+    }
+
+    .section-count {
+      min-width: 28px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #bae6fd;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .item-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .item-button {
+      width: 100%;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .item-button.active {
+      background: rgba(14, 165, 233, 0.2);
+      border-color: rgba(56, 189, 248, 0.48);
+    }
+
+    .item-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .item-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+      word-break: break-all;
+    }
+
+    .player-panel {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: rgba(2, 6, 23, 0.5);
+      box-shadow: var(--shadow);
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: var(--accent-soft);
+      color: #bae6fd;
+      text-transform: uppercase;
+    }
+
+    .player-header h2 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .player-controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(120px, 1fr));
+      gap: 10px;
+      width: min(320px, 100%);
+    }
+
+    .stage {
+      position: relative;
+      min-height: 62vh;
+      padding: 12px;
+      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      overflow: hidden;
+    }
+
+    video,
+    img,
+    .placeholder {
+      width: 100%;
+      height: calc(62vh - 24px);
+      border-radius: 18px;
+      display: none;
+      background: #020617;
+    }
+
+    video,
+    img {
+      object-fit: contain;
+    }
+
+    .placeholder {
+      display: grid;
+      place-items: center;
+      padding: 30px;
+      text-align: center;
+      color: var(--text);
+      background:
+        linear-gradient(135deg, rgba(14, 165, 233, 0.14), rgba(37, 99, 235, 0.14)),
+        rgba(15, 23, 42, 0.9);
+      border: 1px dashed rgba(56, 189, 248, 0.35);
+    }
+
+    .placeholder-box {
+      max-width: 520px;
+    }
+
+    .placeholder-box h3 {
+      margin-bottom: 10px;
+      font-size: 26px;
+    }
+
+    .placeholder-box p {
+      color: #cbd5e1;
+      line-height: 1.7;
+    }
+
+    .player-footer {
+      display: grid;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.54);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .player-footer strong {
+      color: #e0f2fe;
+    }
+
+    @media (max-width: 1080px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .player-header {
+        flex-direction: column;
+      }
+
+      .player-controls {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>现场演示目录</h1>
+        <p>点击任意目录项即可打开对应素材。支持当前目录轮播、按指标顺序轮播和全素材循环轮播。</p>
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar-row">
+          <button id="playSectionBtn" class="primary">轮播当前目录</button>
+          <button id="playMetricsBtn">按指标顺序轮播</button>
+        </div>
+        <div class="toolbar-row">
+          <button id="playAllBtn">全素材轮播</button>
+          <button id="stopBtn" class="danger">停止轮播</button>
+        </div>
+        <button id="scanBtn">自动重新扫描目录</button>
+        <label class="toggle-row">
+          <input id="loopToggle" type="checkbox" checked>
+          <span>轮播结束后自动从头继续</span>
+        </label>
+        <div class="toolbar-note" id="scanStatus">当前使用相对路径播放。后续有新素材上传时，点击“自动重新扫描目录”并选择当前“现场演示”文件夹即可刷新。</div>
+      </div>
+
+      <div class="catalog" id="catalog"></div>
+    </aside>
+
+    <main class="content">
+      <section class="player-panel">
+        <div class="player-header">
+          <div>
+            <div class="badge" id="mediaBadge">待选择</div>
+            <h2 id="mediaTitle">请选择左侧目录项</h2>
+            <p class="meta-line" id="mediaPath">当前尚未打开任何视频或图片。</p>
+          </div>
+
+          <div class="player-controls">
+            <button id="prevBtn">上一个</button>
+            <button id="nextBtn">下一个</button>
+            <button id="replayBtn">重新播放</button>
+            <button id="openCurrentSectionBtn">从当前项轮播</button>
+          </div>
+        </div>
+
+        <div class="stage">
+          <video id="videoPlayer" controls playsinline></video>
+          <img id="imagePlayer" alt="图片预览">
+          <div id="placeholderPlayer" class="placeholder">
+            <div class="placeholder-box">
+              <h3 id="placeholderTitle">待补充素材</h3>
+              <p id="placeholderDesc">左侧空目录已经自动生成占位项，后续素材上传完成后可直接替换为真实文件。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="player-footer">
+          <div id="modeInfo"><strong>当前模式：</strong>单项预览</div>
+          <div id="queueInfo"><strong>轮播状态：</strong>未启动</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const placeholderDurationMs = 4500;
+    const expectedSections = [
+      { id: "metric-1-1", title: "指标 1.1", group: "metric", pathKey: "指标1.1", order: 10 },
+      { id: "metric-1-2", title: "指标 1.2", group: "metric", pathKey: "指标1.2", order: 20 },
+      { id: "metric-2-1", title: "指标 2.1", group: "metric", pathKey: "指标2.1", order: 30 },
+      { id: "metric-2-2", title: "指标 2.2", group: "metric", pathKey: "指标2.2", order: 40 },
+      { id: "metric-2-3", title: "指标 2.3", group: "metric", pathKey: "指标2.3", order: 50 },
+      { id: "metric-3-1", title: "指标 3.1", group: "metric", pathKey: "指标3.1", order: 60 },
+      { id: "metric-3-2", title: "指标 3.2", group: "metric", pathKey: "指标3.2", order: 70 },
+      { id: "metric-4-1", title: "指标 4.1", group: "metric", pathKey: "指标4.1", order: 80 },
+      { id: "metric-4-2", title: "指标 4.2", group: "metric", pathKey: "指标4.2", order: 90 },
+      { id: "room-zhongbao", title: "机房 / 中保科联", group: "room", pathKey: "机房/中保科联", order: 110 },
+      { id: "room-xiehe", title: "机房 / 北京协和医院", group: "room", pathKey: "机房/北京协和医院", order: 120 },
+      { id: "room-yidayiyuan", title: "机房 / 医大一院", group: "room", pathKey: "机房/医大一院", order: 130 },
+      { id: "room-guangdong", title: "机房 / 广东省人民医院", group: "room", pathKey: "机房/广东省人民医院", order: 140 },
+      { id: "room-jiangsu", title: "机房 / 江苏省人民医院", group: "room", pathKey: "机房/江苏省人民医院", order: 150 },
+      { id: "room-shenzhen", title: "机房 / 深圳中医院", group: "room", pathKey: "机房/深圳中医院", order: 160 },
+      { id: "room-weixinyuan", title: "机房 / 微芯院", group: "room", pathKey: "机房/微芯院", order: 170 }
+    ];
+
+    const initialEntries = [
+      "指标1.1/上链服务-1.mp4",
+      "指标1.1/上链服务-v2.mp4",
+      "指标1.1/医疗数据归档-1.mp4",
+      "指标1.1/医疗数据归档-v2.mp4",
+      "指标1.1/指标1.1-5000tps.mp4",
+      "指标1.2/保序加密.mov",
+      "指标1.2/区块链管理平台-v2.mp4",
+      "指标1.2/医疗数据受控使用平台.mp4",
+      "指标1.2/医疗数据受控使用平台v2.mp4",
+      "指标1.2/卫生健康区块链管理平台.mp4",
+      "指标1.2/查询审计日志-v2.mp4",
+      "指标1.2/查询审计日志.mp4",
+      "指标1.2/查询患者索引信息-v2.mp4",
+      "指标1.2/查询患者索引信息.mp4",
+      "指标1.2/隐私保护推理.mov",
+      "指标2.1/2.1数据要素定义.mp4",
+      "指标2.1/2.1统计概念关系数量查询.mp4",
+      "指标2.1/2.1规则推理.mp4",
+      "指标2.2/2.2医学语言系统.mp4",
+      "指标2.2/2.2统计医学概念数量.mp4",
+      "指标2.3/2.3知识图谱数据要素定义查询.mp4",
+      "指标2.3/2.3统计关系数量查询.mp4",
+      "指标2.3/2.3规则推理查询.mp4",
+      "指标4.1/患者链上数据索引-1.mp4",
+      "指标4.1/患者链上数据索引-v2.mp4",
+      "指标4.1/示范应用平台数据总览-1.mp4",
+      "指标4.1/示范应用平台数据总览-v2.mp4",
+      "指标4.2/临床路径监管.mp4",
+      "指标4.2/临床路径监管v2.mp4",
+      "指标4.2/协同诊疗-1.mp4",
+      "指标4.2/协同诊疗-v2.mp4",
+      "指标4.2/多中心科研.mp4",
+      "指标4.2/多中心科研-v2.mp4",
+      "机房/医大一院/5a51536945c83cf2445649d528204dde.mp4",
+      "机房/医大一院/5e5df2ebb20a554b3440028c8fd97d1f.mp4",
+      "机房/医大一院/8fe4da2d9a3300aeaa76187895ecd017.mp4",
+      "机房/微芯院/共识节点服务器1.jpg",
+      "机房/微芯院/共识节点服务器1-标签详情.jpg",
+      "机房/微芯院/共识节点服务器2.jpg",
+      "机房/微芯院/共识节点服务器2-标签详情.jpg",
+      "机房/微芯院/共识节点服务器3.jpg",
+      "机房/微芯院/共识节点服务器3-标签详情.jpg",
+      "机房/微芯院/共识节点服务器4.jpg",
+      "机房/微芯院/共识节点服务器4-标签详情.jpg"
+    ];
+
+    const expectedSectionMap = new Map(expectedSections.map((section) => [section.pathKey, section]));
+    const supportedVideoExtensions = new Set(["mp4", "mov", "webm", "m4v"]);
+    const supportedImageExtensions = new Set(["jpg", "jpeg", "png", "gif", "webp"]);
+
+    const catalogEl = document.getElementById("catalog");
+    const mediaBadgeEl = document.getElementById("mediaBadge");
+    const mediaTitleEl = document.getElementById("mediaTitle");
+    const mediaPathEl = document.getElementById("mediaPath");
+    const modeInfoEl = document.getElementById("modeInfo");
+    const queueInfoEl = document.getElementById("queueInfo");
+    const videoEl = document.getElementById("videoPlayer");
+    const imageEl = document.getElementById("imagePlayer");
+    const placeholderEl = document.getElementById("placeholderPlayer");
+    const placeholderTitleEl = document.getElementById("placeholderTitle");
+    const placeholderDescEl = document.getElementById("placeholderDesc");
+    const loopToggleEl = document.getElementById("loopToggle");
+    const scanStatusEl = document.getElementById("scanStatus");
+
+    let sections = [];
+    let sectionMap = new Map();
+    let itemMap = new Map();
+    let metricQueue = [];
+    let allQueue = [];
+    let currentItemId = null;
+    let currentQueue = [];
+    let currentQueueIndex = -1;
+    let currentModeLabel = "单项预览";
+    let autoAdvanceTimer = null;
+    let currentObjectUrl = null;
+    let activeRenderToken = 0;
+
+    function getTypeLabel(type) {
+      if (type === "video") return "视频";
+      if (type === "image") return "图片";
+      return "占位";
+    }
+
+    function setScanStatus(message) {
+      scanStatusEl.textContent = message;
+    }
+
+    function normalizePath(path) {
+      return path.replace(/\\/g, "/").replace(/^\.?\//, "");
+    }
+
+    function getFileName(path) {
+      return normalizePath(path).split("/").pop() || "";
+    }
+
+    function getFileTitle(path) {
+      return getFileName(path).replace(/\.[^.]+$/, "");
+    }
+
+    function getFileExtension(path) {
+      const fileName = getFileName(path);
+      const dotIndex = fileName.lastIndexOf(".");
+      return dotIndex >= 0 ? fileName.slice(dotIndex + 1).toLowerCase() : "";
+    }
+
+    function inferType(path) {
+      const extension = getFileExtension(path);
+      if (supportedVideoExtensions.has(extension)) return "video";
+      if (supportedImageExtensions.has(extension)) return "image";
+      return null;
+    }
+
+    function naturalCompare(left, right) {
+      return left.localeCompare(right, "zh-Hans-CN", {
+        numeric: true,
+        sensitivity: "base"
+      });
+    }
+
+    function slugify(value) {
+      return value
+        .toLowerCase()
+        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "item";
+    }
+
+    function createPlaceholderItem(section) {
+      return {
+        id: `${section.id}-placeholder`,
+        title: "待上传素材",
+        type: "placeholder",
+        description: `${section.title} 当前目录为空。后续上传素材后，点击“自动重新扫描目录”即可刷新。`,
+        sectionId: section.id,
+        sectionTitle: section.title
+      };
+    }
+
+    function createSectionFromMeta(meta) {
+      return {
+        id: meta.id,
+        title: meta.title,
+        group: meta.group,
+        pathKey: meta.pathKey,
+        order: meta.order,
+        items: []
+      };
+    }
+
+    function detectSectionMeta(path) {
+      const parts = normalizePath(path).split("/");
+      if (parts[0] === "机房" && parts.length >= 2) {
+        const pathKey = `机房/${parts[1]}`;
+        return expectedSectionMap.get(pathKey) || {
+          id: `room-${slugify(parts[1])}`,
+          title: `机房 / ${parts[1]}`,
+          group: "room",
+          pathKey,
+          order: 900
+        };
+      }
+
+      const pathKey = parts[0];
+      if (expectedSectionMap.has(pathKey)) {
+        return expectedSectionMap.get(pathKey);
+      }
+
+      return {
+        id: `auto-${slugify(pathKey)}`,
+        title: pathKey.startsWith("指标") ? pathKey.replace(/^指标(\d+\.\d+)$/, "指标 $1") : pathKey,
+        group: pathKey.startsWith("指标") ? "metric" : "room",
+        pathKey,
+        order: 950
+      };
+    }
+
+    function buildSectionsFromEntries(entries) {
+      const sectionStore = new Map(expectedSections.map((meta) => [meta.pathKey, createSectionFromMeta(meta)]));
+
+      entries.forEach((entry) => {
+        const type = entry.type || inferType(entry.path);
+        if (!type) {
+          return;
+        }
+
+        const relativePath = normalizePath(entry.path);
+        const meta = detectSectionMeta(relativePath);
+        if (!sectionStore.has(meta.pathKey)) {
+          sectionStore.set(meta.pathKey, createSectionFromMeta(meta));
+        }
+
+        const section = sectionStore.get(meta.pathKey);
+        section.items.push({
+          id: `item-${slugify(relativePath)}`,
+          title: entry.title || getFileTitle(relativePath),
+          type,
+          relativePath,
+          handle: entry.handle || null,
+          sectionId: section.id,
+          sectionTitle: section.title
+        });
+      });
+
+      return Array.from(sectionStore.values())
+        .sort((left, right) => {
+          if (left.order !== right.order) {
+            return left.order - right.order;
+          }
+          return naturalCompare(left.title, right.title);
+        })
+        .map((section) => {
+          section.items.sort((left, right) => naturalCompare(left.title, right.title));
+          if (!section.items.length) {
+            section.items.push(createPlaceholderItem(section));
+          }
+          return section;
+        });
+    }
+
+    function rebuildState(nextSections) {
+      sections = nextSections;
+      sectionMap = new Map(sections.map((section) => [section.id, section]));
+      itemMap = new Map();
+
+      sections.forEach((section, sectionIndex) => {
+        section.items.forEach((item, itemIndex) => {
+          item.order = sectionIndex * 100 + itemIndex;
+          itemMap.set(item.id, item);
+        });
+      });
+
+      metricQueue = sections
+        .filter((section) => section.group === "metric")
+        .flatMap((section) => section.items.map((item) => item.id));
+
+      allQueue = sections.flatMap((section) => section.items.map((item) => item.id));
+    }
+
+    function clearAutoAdvanceTimer() {
+      if (autoAdvanceTimer !== null) {
+        window.clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
+    }
+
+    function clearCurrentObjectUrl() {
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
+      }
+    }
+
+    function setVisibility(target) {
+      videoEl.style.display = target === "video" ? "block" : "none";
+      imageEl.style.display = target === "image" ? "block" : "none";
+      placeholderEl.style.display = target === "placeholder" ? "grid" : "none";
+    }
+
+    function updateActiveState() {
+      document.querySelectorAll(".item-button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.itemId === currentItemId);
+      });
+    }
+
+    function updateQueueInfo() {
+      const activeItem = currentItemId ? itemMap.get(currentItemId) : null;
+      modeInfoEl.innerHTML = `<strong>当前模式：</strong>${currentModeLabel}`;
+
+      if (!currentQueue.length) {
+        queueInfoEl.innerHTML = "<strong>轮播状态：</strong>未启动";
+        return;
+      }
+
+      const loopText = loopToggleEl.checked ? "开启循环" : "单轮播放";
+      const currentNumber = currentQueueIndex + 1;
+      const queueSize = currentQueue.length;
+      const activeTitle = activeItem ? activeItem.title : "未选择";
+      queueInfoEl.innerHTML = `<strong>轮播状态：</strong>${currentNumber} / ${queueSize} · ${loopText} · 当前项：${activeTitle}`;
+    }
+
+    function scheduleAutoAdvance(item) {
+      clearAutoAdvanceTimer();
+      if (!currentQueue.length || currentModeLabel === "单项预览") {
+        return;
+      }
+
+      if (item.type === "image" || item.type === "placeholder") {
+        autoAdvanceTimer = window.setTimeout(() => {
+          playNext(true);
+        }, placeholderDurationMs);
+      }
+    }
+
+    async function resolveMediaSource(item) {
+      if (item.handle) {
+        const file = await item.handle.getFile();
+        currentObjectUrl = URL.createObjectURL(file);
+        return currentObjectUrl;
+      }
+
+      return encodeURI(item.relativePath);
+    }
+
+    async function showItem(item, autoplay) {
+      if (!item) {
+        return;
+      }
+
+      clearAutoAdvanceTimer();
+      clearCurrentObjectUrl();
+      const renderToken = ++activeRenderToken;
+      currentItemId = item.id;
+      mediaBadgeEl.textContent = `${getTypeLabel(item.type)} · ${item.sectionTitle}`;
+      mediaTitleEl.textContent = item.title;
+      mediaPathEl.textContent = item.relativePath || item.description || "占位项";
+
+      if (item.type === "video") {
+        setVisibility("video");
+        imageEl.removeAttribute("src");
+        placeholderTitleEl.textContent = "待补充素材";
+        placeholderDescEl.textContent = "";
+        videoEl.pause();
+        const src = await resolveMediaSource(item);
+        if (renderToken !== activeRenderToken) {
+          clearCurrentObjectUrl();
+          return;
+        }
+        videoEl.src = src;
+        videoEl.load();
+        if (autoplay) {
+          videoEl.play().catch(() => {
+            mediaPathEl.textContent = `${item.relativePath}（浏览器拦截了自动播放，请点一下播放按钮）`;
+          });
+        }
+      } else if (item.type === "image") {
+        setVisibility("image");
+        videoEl.pause();
+        videoEl.removeAttribute("src");
+        videoEl.load();
+        const src = await resolveMediaSource(item);
+        if (renderToken !== activeRenderToken) {
+          clearCurrentObjectUrl();
+          return;
+        }
+        imageEl.src = src;
+      } else {
+        setVisibility("placeholder");
+        videoEl.pause();
+        videoEl.removeAttribute("src");
+        videoEl.load();
+        imageEl.removeAttribute("src");
+        placeholderTitleEl.textContent = item.title;
+        placeholderDescEl.textContent = item.description || "当前素材尚未上传，先展示占位内容。";
+      }
+
+      updateActiveState();
+      updateQueueInfo();
+      scheduleAutoAdvance(item);
+    }
+
+    function startQueue(queue, modeLabel, preferredItemId) {
+      if (!queue.length) {
+        return;
+      }
+
+      currentQueue = [...queue];
+      currentModeLabel = modeLabel;
+
+      const preferredIndex = preferredItemId ? currentQueue.indexOf(preferredItemId) : -1;
+      currentQueueIndex = preferredIndex >= 0 ? preferredIndex : 0;
+
+      const item = itemMap.get(currentQueue[currentQueueIndex]);
+      showItem(item, true);
+    }
+
+    function stopQueue() {
+      clearAutoAdvanceTimer();
+      currentQueue = [];
+      currentQueueIndex = -1;
+      currentModeLabel = "单项预览";
+      updateQueueInfo();
+    }
+
+    function playSingle(itemId) {
+      stopQueue();
+      const item = itemMap.get(itemId);
+      showItem(item, false);
+    }
+
+    function getCurrentSectionQueue() {
+      if (!currentItemId) {
+        const firstMetricSection = sections[0];
+        return firstMetricSection.items.map((item) => item.id);
+      }
+
+      const activeItem = itemMap.get(currentItemId);
+      const section = sectionMap.get(activeItem.sectionId);
+      return section.items.map((item) => item.id);
+    }
+
+    function stepInQueue(offset) {
+      const baseQueue = currentQueue.length ? currentQueue : getCurrentSectionQueue();
+      if (!baseQueue.length) {
+        return;
+      }
+
+      const currentIndex = currentItemId ? baseQueue.indexOf(currentItemId) : -1;
+      const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+      let nextIndex = safeIndex + offset;
+
+      if (nextIndex < 0) {
+        nextIndex = baseQueue.length - 1;
+      } else if (nextIndex >= baseQueue.length) {
+        nextIndex = 0;
+      }
+
+      if (currentQueue.length) {
+        currentQueueIndex = nextIndex;
+        showItem(itemMap.get(baseQueue[nextIndex]), true);
+      } else {
+        showItem(itemMap.get(baseQueue[nextIndex]), false);
+      }
+    }
+
+    function playNext(fromAutoAdvance) {
+      if (!currentQueue.length) {
+        stepInQueue(1);
+        return;
+      }
+
+      let nextIndex = currentQueueIndex + 1;
+      if (nextIndex >= currentQueue.length) {
+        if (!loopToggleEl.checked) {
+          if (fromAutoAdvance) {
+            currentModeLabel = "单轮播放结束";
+            updateQueueInfo();
+          }
+          clearAutoAdvanceTimer();
+          return;
+        }
+        nextIndex = 0;
+      }
+
+      currentQueueIndex = nextIndex;
+      showItem(itemMap.get(currentQueue[currentQueueIndex]), true);
+    }
+
+    function playPrev() {
+      if (!currentQueue.length) {
+        stepInQueue(-1);
+        return;
+      }
+
+      currentQueueIndex = currentQueueIndex <= 0 ? currentQueue.length - 1 : currentQueueIndex - 1;
+      showItem(itemMap.get(currentQueue[currentQueueIndex]), true);
+    }
+
+    function renderCatalog() {
+      const fragment = document.createDocumentFragment();
+
+      sections.forEach((section) => {
+        const sectionEl = document.createElement("section");
+        sectionEl.className = "section";
+
+        const headerEl = document.createElement("div");
+        headerEl.className = "section-header";
+        headerEl.innerHTML = `
+          <h3>${section.title}</h3>
+          <div class="section-count">${section.items.length}</div>
+        `;
+
+        const listEl = document.createElement("div");
+        listEl.className = "item-list";
+
+        section.items.forEach((item) => {
+          const itemButton = document.createElement("button");
+          itemButton.className = "item-button";
+          itemButton.dataset.itemId = item.id;
+          itemButton.innerHTML = `
+            <div class="item-title">${item.title}</div>
+            <div class="item-meta">${getTypeLabel(item.type)}${item.relativePath ? " · " + item.relativePath : ""}</div>
+          `;
+          itemButton.addEventListener("click", () => {
+            playSingle(item.id);
+          });
+          listEl.appendChild(itemButton);
+        });
+
+        sectionEl.appendChild(headerEl);
+        sectionEl.appendChild(listEl);
+        fragment.appendChild(sectionEl);
+      });
+
+      catalogEl.replaceChildren(fragment);
+    }
+
+    function buildInitialCatalog() {
+      const entries = initialEntries.map((path) => ({
+        path: path,
+        title: getFileTitle(path),
+        type: inferType(path)
+      }));
+
+      rebuildState(buildSectionsFromEntries(entries));
+      renderCatalog();
+    }
+
+    async function collectEntries(directoryHandle, parentSegments = []) {
+      const entries = [];
+
+      for await (const handle of directoryHandle.values()) {
+        if (handle.name.startsWith(".")) {
+          continue;
+        }
+
+        if (handle.kind === "directory") {
+          const nestedEntries = await collectEntries(handle, [...parentSegments, handle.name]);
+          entries.push(...nestedEntries);
+          continue;
+        }
+
+        if (handle.name === "index.html") {
+          continue;
+        }
+
+        const relativePath = [...parentSegments, handle.name].join("/");
+        const type = inferType(relativePath);
+        if (!type) {
+          continue;
+        }
+
+        entries.push({
+          path: relativePath,
+          title: getFileTitle(relativePath),
+          type,
+          handle
+        });
+      }
+
+      return entries;
+    }
+
+    async function scanDirectory() {
+      if (!window.showDirectoryPicker) {
+        setScanStatus("当前浏览器不支持目录扫描。请使用最新版 Chrome 或 Edge 打开该页面。");
+        return;
+      }
+
+      try {
+        setScanStatus("正在扫描目录，请稍候...");
+        const directoryHandle = await window.showDirectoryPicker({ mode: "read" });
+        const entries = await collectEntries(directoryHandle);
+        stopQueue();
+        clearCurrentObjectUrl();
+        currentItemId = null;
+        rebuildState(buildSectionsFromEntries(entries));
+        renderCatalog();
+        updateActiveState();
+        updateQueueInfo();
+        setScanStatus(`扫描完成：识别到 ${entries.length} 个素材，目录已刷新。后续新增文件时可再次点击本按钮重扫。`);
+      } catch (error) {
+        if (error && error.name === "AbortError") {
+          setScanStatus("已取消扫描。当前目录列表保持不变。");
+          return;
+        }
+        setScanStatus(`扫描失败：${error.message || "请重试"}`);
+      }
+    }
+
+    document.getElementById("playSectionBtn").addEventListener("click", () => {
+      const queue = getCurrentSectionQueue();
+      startQueue(queue, "当前目录轮播", currentItemId);
+    });
+
+    document.getElementById("playMetricsBtn").addEventListener("click", () => {
+      const preferredItem = currentItemId && metricQueue.includes(currentItemId) ? currentItemId : metricQueue[0];
+      startQueue(metricQueue, "按指标顺序轮播", preferredItem);
+    });
+
+    document.getElementById("playAllBtn").addEventListener("click", () => {
+      const preferredItem = currentItemId && allQueue.includes(currentItemId) ? currentItemId : allQueue[0];
+      startQueue(allQueue, "全素材轮播", preferredItem);
+    });
+
+    document.getElementById("stopBtn").addEventListener("click", () => {
+      stopQueue();
+    });
+
+    document.getElementById("scanBtn").addEventListener("click", () => {
+      scanDirectory();
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      playPrev();
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      playNext(false);
+    });
+
+    document.getElementById("replayBtn").addEventListener("click", () => {
+      if (!currentItemId) {
+        return;
+      }
+
+      const item = itemMap.get(currentItemId);
+      if (item.type === "video") {
+        videoEl.currentTime = 0;
+        videoEl.play().catch(() => {});
+      } else {
+        showItem(item, false);
+      }
+    });
+
+    document.getElementById("openCurrentSectionBtn").addEventListener("click", () => {
+      const queue = getCurrentSectionQueue();
+      startQueue(queue, "当前目录轮播", currentItemId);
+    });
+
+    loopToggleEl.addEventListener("change", () => {
+      updateQueueInfo();
+    });
+
+    videoEl.addEventListener("ended", () => {
+      playNext(true);
+    });
+
+    videoEl.addEventListener("error", () => {
+      const item = currentItemId ? itemMap.get(currentItemId) : null;
+      if (item) {
+        mediaPathEl.textContent = `${item.relativePath}（文件暂不可播放，请检查是否上传完成）`;
+        scheduleAutoAdvance(item);
+      }
+    });
+
+    buildInitialCatalog();
+    updateQueueInfo();
+  </script>
+</body>
+</html>
