@@ -37,21 +37,27 @@
 
     .app {
       display: grid;
-      grid-template-columns: 360px minmax(0, 1fr);
-      min-height: 100vh;
+      grid-template-columns: 320px minmax(0, 1fr);
+      height: 100vh;
+      overflow: hidden;
     }
 
     .sidebar {
-      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100vh;
+      padding: 16px 14px;
       border-right: 1px solid var(--line);
       background: rgba(2, 6, 23, 0.72);
       backdrop-filter: blur(16px);
-      overflow-y: auto;
+      overflow: hidden;
     }
 
     .content {
-      padding: 24px;
-      overflow: auto;
+      height: 100vh;
+      padding: 10px 10px 10px 0;
+      overflow: hidden;
     }
 
     h1,
@@ -62,12 +68,12 @@
     }
 
     .sidebar-header {
-      margin-bottom: 20px;
+      margin-bottom: 4px;
     }
 
     .sidebar-header h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
+      font-size: 22px;
+      margin-bottom: 0;
     }
 
     .sidebar-header p,
@@ -78,25 +84,9 @@
     }
 
     .toolbar {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .toolbar-note {
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(15, 23, 42, 0.42);
-      border: 1px solid rgba(148, 163, 184, 0.14);
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .toolbar-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
     }
 
     button,
@@ -110,9 +100,39 @@
     }
 
     button {
-      padding: 12px 14px;
-      font-size: 14px;
+      padding: 8px 10px;
+      font-size: 12px;
       font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .toolbar > button {
+      flex: 0 0 auto;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    #settingsBtn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.28);
+    }
+
+    #fullscreenBtn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.18);
+      margin-right: 6px;
     }
 
     button:hover,
@@ -134,9 +154,14 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 14px;
+      padding: 8px 10px;
       border-radius: 14px;
       background: var(--panel-soft);
+    }
+
+    .toggle-row span {
+      font-size: 12px;
+      line-height: 1.35;
     }
 
     .toggle-row input {
@@ -145,13 +170,107 @@
       accent-color: var(--accent);
     }
 
-    .catalog {
+    .toolbar-note {
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      color: var(--text-soft);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .settings-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(2, 6, 23, 0.58);
+      backdrop-filter: blur(4px);
+      z-index: 20;
+      padding: 18px;
+    }
+
+    .settings-modal.open {
       display: grid;
-      gap: 14px;
+    }
+
+    .settings-panel {
+      width: min(480px, 100%);
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(2, 6, 23, 0.96);
+      box-shadow: var(--shadow);
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .settings-header h3 {
+      font-size: 14px;
+    }
+
+    .settings-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .filter-actions {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .filter-btn.active-filter {
+      border-color: rgba(56, 189, 248, 0.48);
+      background: rgba(14, 165, 233, 0.2);
+    }
+
+    .settings-close {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 10px;
+    }
+
+    .catalog {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      gap: 10px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      overscroll-behavior: contain;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.55) transparent;
+    }
+
+    .catalog::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .catalog::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .catalog::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.55);
+      border-radius: 999px;
+    }
+
+    .catalog::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.72);
     }
 
     .section {
-      padding: 14px;
+      padding: 12px;
       border: 1px solid var(--line);
       border-radius: 18px;
       background: var(--panel);
@@ -161,13 +280,24 @@
     .section-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 4px;
     }
 
     .section-header h3 {
       font-size: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.5;
     }
 
     .section-count {
@@ -187,8 +317,17 @@
 
     .item-button {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       text-align: left;
+    }
+
+    .item-button.highlighted {
+      position: relative;
+      border-color: rgba(250, 204, 21, 0.36);
+      background:
+        linear-gradient(135deg, rgba(250, 204, 21, 0.14), rgba(245, 158, 11, 0.08)),
+        rgba(30, 41, 59, 0.9);
+      box-shadow: 0 12px 24px rgba(245, 158, 11, 0.12);
     }
 
     .item-button.active {
@@ -196,11 +335,37 @@
       border-color: rgba(56, 189, 248, 0.48);
     }
 
+    .item-button.highlighted.active {
+      background:
+        linear-gradient(135deg, rgba(250, 204, 21, 0.18), rgba(14, 165, 233, 0.18)),
+        rgba(14, 165, 233, 0.22);
+      border-color: rgba(250, 204, 21, 0.5);
+    }
+
     .item-title {
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 4px;
       word-break: break-word;
+    }
+
+    .item-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .item-badge {
+      flex: 0 0 auto;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.18);
+      color: #fde68a;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
 
     .item-meta {
@@ -211,19 +376,23 @@
 
     .player-panel {
       display: grid;
-      gap: 18px;
-      padding: 22px;
+      grid-template-rows: auto 1fr;
+      gap: 10px;
+      height: calc(100vh - 20px);
+      padding: 12px;
       border-radius: 24px;
       border: 1px solid var(--line);
-      background: rgba(2, 6, 23, 0.5);
+      background: rgba(2, 6, 23, 0.56);
       box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
     .player-header {
       display: flex;
       justify-content: space-between;
-      gap: 20px;
+      gap: 16px;
       align-items: flex-start;
+      padding: 2px 2px 0;
     }
 
     .badge {
@@ -242,25 +411,32 @@
     }
 
     .player-header h2 {
-      font-size: 30px;
-      margin-bottom: 8px;
+      font-size: 24px;
+      margin-bottom: 6px;
       word-break: break-word;
     }
 
     .player-controls {
       display: grid;
-      grid-template-columns: repeat(2, minmax(120px, 1fr));
-      gap: 10px;
-      width: min(320px, 100%);
+      grid-template-columns: repeat(2, minmax(96px, 1fr));
+      gap: 8px;
+      width: min(280px, 100%);
+    }
+
+    .player-controls button {
+      padding: 7px 8px;
+      font-size: 11px;
+      border-radius: 12px;
     }
 
     .stage {
       position: relative;
-      min-height: 62vh;
-      padding: 12px;
+      height: calc(100vh - 16px);
+      min-height: calc(100vh - 16px);
+      padding: 0;
       border-radius: 24px;
-      background: rgba(15, 23, 42, 0.72);
-      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.14);
       overflow: hidden;
     }
 
@@ -268,8 +444,8 @@
     img,
     .placeholder {
       width: 100%;
-      height: calc(62vh - 24px);
-      border-radius: 18px;
+      height: 100%;
+      border-radius: 20px;
       display: none;
       background: #020617;
     }
@@ -306,17 +482,69 @@
     }
 
     .player-footer {
+      display: none;
+    }
+
+    .settings-status {
       display: grid;
       gap: 8px;
-      padding: 14px 16px;
-      border-radius: 18px;
+      padding: 10px 12px;
+      border-radius: 14px;
       background: rgba(15, 23, 42, 0.54);
       border: 1px solid rgba(148, 163, 184, 0.12);
     }
 
-    .player-footer strong {
+    .settings-status-row {
+      color: var(--text-soft);
+      font-size: 12px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .settings-status-row strong {
       color: #e0f2fe;
     }
+
+    
+    .player-header,
+    .player-footer {
+      display: none !important;
+    }
+
+    .content .player-panel {
+      height: 100%;
+    }
+
+
+    .floating-controls {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 4;
+      display: flex;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .floating-controls button {
+      min-width: 72px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      color: #e2e8f0;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .floating-controls button:hover {
+      border-color: rgba(56, 189, 248, 0.36);
+      background: rgba(15, 23, 42, 0.76);
+    }
+
 
     @media (max-width: 1080px) {
       .app {
@@ -326,6 +554,7 @@
       .sidebar {
         border-right: 0;
         border-bottom: 1px solid var(--line);
+        height: auto;
       }
 
       .player-header {
@@ -335,6 +564,15 @@
       .player-controls {
         width: 100%;
       }
+
+      .content {
+        padding: 10px;
+      }
+
+      .player-panel {
+        height: auto;
+        min-height: calc(100vh - 220px);
+      }
     }
   </style>
 </head>
@@ -343,27 +581,14 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <h1>现场演示目录</h1>
-        <p>点击任意目录项即可打开对应素材。支持当前目录轮播、按指标顺序轮播和全素材循环轮播。</p>
-      </div>
-
-      <div class="toolbar">
-        <div class="toolbar-row">
-          <button id="playSectionBtn" class="primary">轮播当前目录</button>
-          <button id="playMetricsBtn">按指标顺序轮播</button>
-        </div>
-        <div class="toolbar-row">
-          <button id="playAllBtn">全素材轮播</button>
-          <button id="stopBtn" class="danger">停止轮播</button>
-        </div>
-        <button id="scanBtn">自动重新扫描目录</button>
-        <label class="toggle-row">
-          <input id="loopToggle" type="checkbox" checked>
-          <span>轮播结束后自动从头继续</span>
-        </label>
-        <div class="toolbar-note" id="scanStatus">当前使用相对路径播放。后续有新素材上传时，点击“自动重新扫描目录”并选择当前“现场演示”文件夹即可刷新。</div>
       </div>
 
       <div class="catalog" id="catalog"></div>
+
+      <div class="toolbar">
+        <button id="fullscreenBtn" aria-label="全屏" title="全屏">⛶</button>
+        <button id="settingsBtn" aria-label="打开设置" title="打开设置">⚙</button>
+      </div>
     </aside>
 
     <main class="content">
@@ -375,16 +600,17 @@
             <p class="meta-line" id="mediaPath">当前尚未打开任何视频或图片。</p>
           </div>
 
-          <div class="player-controls">
-            <button id="prevBtn">上一个</button>
-            <button id="nextBtn">下一个</button>
-            <button id="replayBtn">重新播放</button>
-            <button id="openCurrentSectionBtn">从当前项轮播</button>
-          </div>
+          
         </div>
 
         <div class="stage">
-          <video id="videoPlayer" controls playsinline></video>
+          <div class="floating-controls">
+            <button id="prevBtn">上一个</button>
+            <button id="nextBtn">下一个</button>
+            <button id="replayBtn">重播</button>
+            <button id="openCurrentSectionBtn">轮播</button>
+          </div>
+          <video id="videoPlayer" controls playsinline preload="auto"></video>
           <img id="imagePlayer" alt="图片预览">
           <div id="placeholderPlayer" class="placeholder">
             <div class="placeholder-box">
@@ -393,34 +619,570 @@
             </div>
           </div>
         </div>
-
-        <div class="player-footer">
-          <div id="modeInfo"><strong>当前模式：</strong>单项预览</div>
-          <div id="queueInfo"><strong>轮播状态：</strong>未启动</div>
-        </div>
       </section>
     </main>
   </div>
 
+  <div id="settingsModal" class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h3 id="settingsTitle">设置</h3>
+        <button id="closeSettingsBtn" class="settings-close" aria-label="关闭设置">×</button>
+      </div>
+      <div class="settings-actions">
+        <button id="playSectionBtn" class="primary">轮播当前目录</button>
+        <button id="playBoothBtn">同展台轮播</button>
+        <button id="playMetricsBtn">按指标顺序轮播</button>
+        <button id="playAllBtn">全素材轮播</button>
+        <button id="stopBtn" class="danger">停止轮播</button>
+      </div>
+      <button id="scanBtn">选择本地目录</button>
+      <label class="toggle-row">
+        <input id="sourceModeToggle" type="checkbox">
+        <span id="sourceModeLabel">使用云端视频</span>
+      </label>
+      <label class="toggle-row">
+        <input id="loopToggle" type="checkbox" checked>
+        <span>轮播结束后自动从头继续</span>
+      </label>
+      <label class="toggle-row">
+        <input id="centerActiveToggle" type="checkbox" checked>
+        <span>切换视频时将当前条目尽量滚动到列表中间</span>
+      </label>
+      <div class="settings-actions filter-actions">
+        <button id="filterAllBtn" class="filter-btn active-filter">显示全部条目</button>
+        <button id="filterBoothBtn" class="filter-btn">仅显示当前展台条目</button>
+        <button id="filterMetricBtn" class="filter-btn">仅显示当前指标条目</button>
+      </div>
+      <div class="settings-status">
+        <div id="modeInfo" class="settings-status-row"><strong>当前模式：</strong>单项预览</div>
+        <div id="queueInfo" class="settings-status-row"><strong>轮播状态：</strong>未启动</div>
+      </div>
+      <div class="toolbar-note" id="scanStatus">可直接在前端选择本地“现场演示”目录。选择后会按腾讯文档清单匹配素材并刷新目录。</div>
+    </div>
+  </div>
+
+  <input id="directoryInput" type="file" webkitdirectory directory multiple hidden>
+
   <script>
     const placeholderDurationMs = 4500;
-    const expectedSections = [
-      { id: "metric-1-1", title: "指标 1.1", group: "metric", pathKey: "指标1.1", order: 10 },
-      { id: "metric-1-2", title: "指标 1.2", group: "metric", pathKey: "指标1.2", order: 20 },
-      { id: "metric-2-1", title: "指标 2.1", group: "metric", pathKey: "指标2.1", order: 30 },
-      { id: "metric-2-2", title: "指标 2.2", group: "metric", pathKey: "指标2.2", order: 40 },
-      { id: "metric-2-3", title: "指标 2.3", group: "metric", pathKey: "指标2.3", order: 50 },
-      { id: "metric-3-1", title: "指标 3.1", group: "metric", pathKey: "指标3.1", order: 60 },
-      { id: "metric-3-2", title: "指标 3.2", group: "metric", pathKey: "指标3.2", order: 70 },
-      { id: "metric-4-1", title: "指标 4.1", group: "metric", pathKey: "指标4.1", order: 80 },
-      { id: "metric-4-2", title: "指标 4.2", group: "metric", pathKey: "指标4.2", order: 90 },
-      { id: "room-zhongbao", title: "机房 / 中保科联", group: "room", pathKey: "机房/中保科联", order: 110 },
-      { id: "room-xiehe", title: "机房 / 北京协和医院", group: "room", pathKey: "机房/北京协和医院", order: 120 },
-      { id: "room-yidayiyuan", title: "机房 / 医大一院", group: "room", pathKey: "机房/医大一院", order: 130 },
-      { id: "room-guangdong", title: "机房 / 广东省人民医院", group: "room", pathKey: "机房/广东省人民医院", order: 140 },
-      { id: "room-jiangsu", title: "机房 / 江苏省人民医院", group: "room", pathKey: "机房/江苏省人民医院", order: 150 },
-      { id: "room-shenzhen", title: "机房 / 深圳中医院", group: "room", pathKey: "机房/深圳中医院", order: 160 },
-      { id: "room-weixinyuan", title: "机房 / 微芯院", group: "room", pathKey: "机房/微芯院", order: 170 }
+    const supportedVideoExtensions = new Set(["mp4", "mov", "m4v", "webm", "mkv"]);
+    const supportedImageExtensions = new Set(["jpg", "jpeg", "png", "gif", "webp"]);
+    const topicThreeSplitSeconds = 57;
+    const highlightedItemIds = new Set([
+      "item-5000tps",
+      "item-inference",
+      "item-4-1-combined",
+      "item-multi-center",
+      "item-clinical-path"
+    ]);
+
+    const sectionBlueprints = [
+    { id: "sec-home", title: "平台功能概介", subtitle: "对平台首页的介绍", order: 110, group: "home" },
+      { id: "sec-1-1", title: "展台1 · 指标1.1", subtitle: "基于区块链的卫生健康数据可信存储和链上链下协同交互机制与算法", order: 10, group: "metric" },
+      { id: "sec-1-2", title: "展台1 · 指标1.2", subtitle: "面向高协同卫生健康数据的可信共享与查询机制", order: 20, group: "metric" },
+      { id: "sec-2-1", title: "展台2 · 指标2.1", subtitle: "支持卫生健康数据要素定义及规则推理的知识图谱", order: 30, group: "metric" },
+      { id: "sec-2-2", title: "展台2 · 指标2.2", subtitle: "医学语言系统", order: 40, group: "metric" },
+      { id: "sec-2-3", title: "展台2 · 指标2.3", subtitle: "知识图谱要素定义、质量评估、规则推理方法", order: 50, group: "metric" },
+      { id: "sec-3-1", title: "展台3 · 指标3.1", subtitle: "卫生健康区块链隐私保护技术", order: 60, group: "metric" },
+      { id: "sec-3-2", title: "展台3 · 指标3.2", subtitle: "融合区块链与联邦学习的可信分析系统", order: 70, group: "metric" },
+      { id: "sec-4-1", title: "展台4 · 指标4.1", subtitle: "卫生健康区块链示范应用平台", order: 80, group: "metric" },
+      { id: "sec-4-2", title: "展台4 · 指标4.2", subtitle: "基于区块链的卫生健康数据示范应用", order: 90, group: "metric" },
+      { id: "sec-room", title: "机房环境", subtitle: "各医院提供机房和设备的真实照片视频", order: 100, group: "room" },
+      
+    ];
+
+    const itemBlueprints = [
+      {
+        id: "item-upchain",
+        sectionId: "sec-1-1",
+        title: "上链服务",
+        unit: "北大",
+        owner: "黄志轩",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.1/", includes: ["上链服务", "v2"] },
+            { pathPrefix: "指标1.1/", includes: ["上链服务"] }
+          ]
+        }
+      },
+      {
+        id: "item-archive",
+        sectionId: "sec-1-1",
+        title: "医疗数据归档",
+        unit: "北大",
+        owner: "黄志轩",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.1/", includes: ["医疗数据归档", "v2"] },
+            { pathPrefix: "指标1.1/", includes: ["医疗数据归档"] }
+          ]
+        }
+      },
+      {
+        id: "item-5000tps",
+        sectionId: "sec-1-1",
+        title: "5000TPS",
+        unit: "微芯院",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.1/", includes: ["5000tps"] }
+          ]
+        }
+      },
+      {
+        id: "item-controlled",
+        sectionId: "sec-1-2",
+        title: "医疗数据受控使用平台",
+        unit: "北大",
+        owner: "杜汶睿",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.2/", includes: ["医疗数据受控使用平台", "v2"] },
+            { pathPrefix: "指标1.2/", includes: ["医疗数据受控使用平台"] }
+          ]
+        }
+      },
+      {
+        id: "item-ope",
+        sectionId: "sec-1-2",
+        title: "OPE密文计算平台",
+        unit: "北大",
+        owner: "周宇傲",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.2/", includes: ["保序加密"] }
+          ]
+        }
+      },
+      {
+        id: "item-inference",
+        sectionId: "sec-1-2",
+        title: "隐私保护推理",
+        unit: "北大",
+        owner: "周宇傲",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.2/", includes: ["隐私保护推理"] }
+          ]
+        }
+      },
+      {
+        id: "item-patient-query",
+        sectionId: "sec-1-2",
+        title: "查询患者索引信息",
+        unit: "北大",
+        owner: "蒋谨谦",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.2/", includes: ["查询患者索引信息", "v2"] },
+            { pathPrefix: "指标1.2/", includes: ["查询患者索引信息"] }
+          ]
+        }
+      },
+      {
+        id: "item-audit-query",
+        sectionId: "sec-1-2",
+        title: "查询审计日志",
+        unit: "北大",
+        owner: "蒋谨谦",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.2/", includes: ["查询审计日志", "v2"] },
+            { pathPrefix: "指标1.2/", includes: ["查询审计日志"] }
+          ]
+        }
+      },
+      {
+        id: "item-chain-admin",
+        sectionId: "sec-1-2",
+        title: "卫生健康区块链管理平台",
+        unit: "北大",
+        owner: "蒋谨谦",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标1.2/", includes: ["区块链管理平台", "v2"] },
+            { pathPrefix: "指标1.2/", includes: ["卫生健康区块链管理平台"] },
+            { pathPrefix: "指标1.2/", includes: ["区块链管理平台"] }
+          ]
+        }
+      },
+      {
+        id: "item-data-element",
+        sectionId: "sec-2-1",
+        title: "数据要素定义",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.1/", includes: ["数据要素定义"] }
+          ]
+        }
+      },
+      {
+        id: "item-concept-count",
+        sectionId: "sec-2-1",
+        title: "统计概念关系数量查询",
+        unit: "自动化所",
+        owner: "都重新录视频上传了",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.1/", includes: ["统计概念关系数量查询"] }
+          ]
+        }
+      },
+      {
+        id: "item-rule-reasoning",
+        sectionId: "sec-2-1",
+        title: "规则推理",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.1/", includes: ["规则推理"] }
+          ]
+        }
+      },
+      {
+        id: "item-health-directory",
+        sectionId: "sec-2-1",
+        title: "卫生健康数据目录",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { includes: ["卫生健康数据目录"] }
+          ]
+        }
+      },
+      {
+        id: "item-medical-language",
+        sectionId: "sec-2-2",
+        title: "医学语言系统",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.2/", includes: ["医学语言系统"] }
+          ]
+        }
+      },
+      {
+        id: "item-medical-count",
+        sectionId: "sec-2-2",
+        title: "统计医学概念数量",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.2/", includes: ["统计医学概念数量"] }
+          ]
+        }
+      },
+      {
+        id: "item-kg-definition",
+        sectionId: "sec-2-3",
+        title: "知识图谱数据要素定义查询",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.3/", includes: ["知识图谱数据要素定义查询"] }
+          ]
+        }
+      },
+      {
+        id: "item-rule-query",
+        sectionId: "sec-2-3",
+        title: "规则推理查询",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.3/", includes: ["规则推理查询"] }
+          ]
+        }
+      },
+      {
+        id: "item-relation-count",
+        sectionId: "sec-2-3",
+        title: "统计关系数量查询",
+        unit: "自动化所",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标2.3/", includes: ["统计关系数量查询"] }
+          ]
+        }
+      },
+      {
+        id: "item-topic-three-master",
+        sectionId: "sec-3-1",
+        hidden: true,
+        title: "课题三主视频",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标3.1/" },
+            { pathPrefix: "指标3.2/" },
+            { includes: ["课题三"] },
+            { includes: ["中山大学"] },
+            { includes: ["隐私保护技术"] },
+            { includes: ["可信分析系统"] }
+          ]
+        }
+      },
+      {
+        id: "item-risk-defense",
+        sectionId: "sec-3-1",
+        title: "系统风险感知与防护",
+        unit: "中山大学",
+        owner: "一个大的视频，在 00:57 秒可截成两个视频",
+        sharedFrom: "item-topic-three-master",
+        clipStartSeconds: 0,
+        clipEndSeconds: topicThreeSplitSeconds
+      },
+      {
+        id: "item-data-security",
+        sectionId: "sec-3-1",
+        title: "数据安全存储与访问",
+        unit: "中山大学",
+        sharedFrom: "item-topic-three-master",
+        clipStartSeconds: 0,
+        clipEndSeconds: topicThreeSplitSeconds
+      },
+      {
+        id: "item-cipher-analysis",
+        sectionId: "sec-3-1",
+        title: "密文等效智能分析",
+        unit: "中山大学",
+        sharedFrom: "item-topic-three-master",
+        clipStartSeconds: 0,
+        clipEndSeconds: topicThreeSplitSeconds
+      },
+      {
+        id: "item-distributed-stats",
+        sectionId: "sec-3-2",
+        title: "分布式统计分析方法",
+        unit: "中山大学",
+        sharedFrom: "item-topic-three-master",
+        clipStartSeconds: topicThreeSplitSeconds
+      },
+      {
+        id: "item-data-governance",
+        sectionId: "sec-3-2",
+        title: "数据治理方法",
+        unit: "中山大学",
+        sharedFrom: "item-topic-three-master",
+        clipStartSeconds: topicThreeSplitSeconds
+      },
+      {
+        id: "item-4-1-combined",
+        sectionId: "sec-4-1",
+        title: "示范应用平台数据总览（含患者链上数据索引、数据容量）",
+        unit: "北大",
+        owner: "黄志轩",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标4.1/", includes: ["示范应用平台数据总览", "v3"] },
+            { pathPrefix: "指标4.1/", includes: ["示范应用平台数据总览", "v2"] },
+            { pathPrefix: "指标4.1/", includes: ["示范应用平台数据总览"] }
+          ]
+        }
+      },
+      {
+        id: "item-multi-center",
+        sectionId: "sec-4-2",
+        title: "示范应用一：多中心科研",
+        unit: "北大",
+        owner: "蒋谨谦（思宇录视频）",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标4.2/", includes: ["多中心科研", "v2"] },
+            { pathPrefix: "指标4.2/", includes: ["多中心科研"] }
+          ]
+        }
+      },
+      {
+        id: "item-collab",
+        sectionId: "sec-4-2",
+        title: "示范应用二：协同诊疗",
+        unit: "北大",
+        owner: "黄志轩",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标4.2/", includes: ["协同诊疗", "v2"] },
+            { pathPrefix: "指标4.2/", includes: ["协同诊疗"] }
+          ]
+        }
+      },
+      // {
+      //   id: "item-collab-transfer",
+      //   sectionId: "sec-4-2",
+      //   title: "示范应用二：协同诊疗【转诊】",
+      //   place: "协和医院",
+      //   unit: "北大",
+      //   owner: "翟思宇",
+      //   sharedFrom: "item-collab"
+      // },
+      {
+        id: "item-collab-remote",
+        sectionId: "sec-4-2",
+        title: "示范应用二：协同诊疗【远程诊疗】",
+        unit: "医大一院、东华",
+        owner: "崔政",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标4.2/", includes: ["协同诊疗", "远程诊疗"] },
+          ]
+        }
+      },
+      {
+        id: "item-clinical-path",
+        sectionId: "sec-4-2",
+        title: "示范应用三：临床路径监管",
+        unit: "北大",
+        owner: "杜汶睿",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标4.2/", includes: ["临床路径监管", "v2"] },
+            { pathPrefix: "指标4.2/", includes: ["临床路径监管"] }
+          ]
+        }
+      },
+      {
+        id: "item-insurance",
+        sectionId: "sec-4-2",
+        title: "商保赔付",
+        unit: "中保科联",
+        owner: "中保科联",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { pathPrefix: "指标4.2/", includes: ["用户报案"] },
+          ]
+        }
+      },
+      {
+        id: "item-room-yida",
+        sectionId: "sec-room",
+        title: "医大一院机房",
+        unit: "医大一院",
+        matcher: {
+          mode: "multi",
+          folderPrefixes: ["机房/医大一院/"]
+        }
+      },
+      {
+        id: "item-room-weixin",
+        sectionId: "sec-room",
+        title: "微芯院机房",
+        unit: "微芯院",
+        matcher: {
+          mode: "multi",
+          folderPrefixes: ["机房/微芯院/"]
+        }
+      },
+      {
+        id: "item-room-shenzhen",
+        sectionId: "sec-room",
+        title: "深圳市中医院机房",
+        unit: "深圳市中医院",
+        matcher: {
+          mode: "multi",
+          folderPrefixes: ["机房/深圳中医院/", "机房/深圳市中医院/"]
+        }
+      },
+      {
+        id: "item-room-guangdong",
+        sectionId: "sec-room",
+        title: "广东省人民医院机房",
+        unit: "广东省人民医院",
+        matcher: {
+          mode: "multi",
+          folderPrefixes: ["机房/广东省人民医院/"]
+        }
+      },
+      {
+        id: "item-room-jiangsu",
+        sectionId: "sec-room",
+        title: "江苏省人民医院机房",
+        unit: "江苏省人民医院",
+        matcher: {
+          mode: "multi",
+          folderPrefixes: ["机房/江苏省人民医院/"]
+        }
+      },
+      {
+        id: "item-room-xiehe",
+        sectionId: "sec-room",
+        title: "协和医院机房",
+        unit: "协和医院",
+        owner: "周一去协和，顺便拍一下",
+        matcher: {
+          mode: "multi",
+          folderPrefixes: ["机房/北京协和医院/", "机房/协和医院/"]
+        }
+      },
+      {
+        id: "item-room-zhongbao",
+        sectionId: "sec-room",
+        title: "中保科联机房",
+        unit: "中保科联",
+        matcher: {
+          mode: "multi",
+          folderPrefixes: ["机房/中保科联/"]
+        }
+      },
+      {
+        id: "item-home",
+        sectionId: "sec-home",
+        title: "平台首页",
+        unit: "北大",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { includes: ["平台首页"] }
+          ]
+        }
+      },
+      {
+        id: "item-home-topology",
+        sectionId: "sec-home",
+        title: "微芯院长安链平台拓扑图",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { includes: ["54b3307dc062489c35a4582ba4e95685"] }
+          ]
+        }
+      },
+      {
+        id: "item-home-architecture",
+        sectionId: "sec-home",
+        title: "卫生健康数据可信共享系统架构图",
+        matcher: {
+          mode: "single",
+          candidates: [
+            { includes: ["6839e76c73712f8def802bd4b4335ef8"] }
+          ]
+        }
+      }
     ];
 
     const initialEntries = [
@@ -428,7 +1190,8 @@
       "指标1.1/上链服务-v2.mp4",
       "指标1.1/医疗数据归档-1.mp4",
       "指标1.1/医疗数据归档-v2.mp4",
-      "指标1.1/指标1.1-5000tps.mp4",
+      // "指标1.1/指标1.1-5000tps.mp4",
+      "指标1.1/指标1.1-5000tps.mov",
       "指标1.2/保序加密.mov",
       "指标1.2/区块链管理平台-v2.mp4",
       "指标1.2/医疗数据受控使用平台.mp4",
@@ -455,6 +1218,8 @@
       "指标4.2/临床路径监管v2.mp4",
       "指标4.2/协同诊疗-1.mp4",
       "指标4.2/协同诊疗-v2.mp4",
+      "指标4.2/协同诊疗-远程诊疗.mp4",
+      "指标4.2/用户报案.mov",
       "指标4.2/多中心科研.mp4",
       "指标4.2/多中心科研-v2.mp4",
       "机房/医大一院/5a51536945c83cf2445649d528204dde.mp4",
@@ -467,12 +1232,9 @@
       "机房/微芯院/共识节点服务器3.jpg",
       "机房/微芯院/共识节点服务器3-标签详情.jpg",
       "机房/微芯院/共识节点服务器4.jpg",
-      "机房/微芯院/共识节点服务器4-标签详情.jpg"
+      "机房/微芯院/共识节点服务器4-标签详情.jpg",
+      "平台首页.mp4"
     ];
-
-    const expectedSectionMap = new Map(expectedSections.map((section) => [section.pathKey, section]));
-    const supportedVideoExtensions = new Set(["mp4", "mov", "webm", "m4v"]);
-    const supportedImageExtensions = new Set(["jpg", "jpeg", "png", "gif", "webp"]);
 
     const catalogEl = document.getElementById("catalog");
     const mediaBadgeEl = document.getElementById("mediaBadge");
@@ -485,34 +1247,78 @@
     const placeholderEl = document.getElementById("placeholderPlayer");
     const placeholderTitleEl = document.getElementById("placeholderTitle");
     const placeholderDescEl = document.getElementById("placeholderDesc");
+    const sourceModeToggleEl = document.getElementById("sourceModeToggle");
+    const sourceModeLabelEl = document.getElementById("sourceModeLabel");
     const loopToggleEl = document.getElementById("loopToggle");
+    const centerActiveToggleEl = document.getElementById("centerActiveToggle");
     const scanStatusEl = document.getElementById("scanStatus");
+    const settingsModalEl = document.getElementById("settingsModal");
+    const settingsBtnEl = document.getElementById("settingsBtn");
+    const fullscreenBtnEl = document.getElementById("fullscreenBtn");
+    const closeSettingsBtnEl = document.getElementById("closeSettingsBtn");
+    const directoryInputEl = document.getElementById("directoryInput");
 
     let sections = [];
     let sectionMap = new Map();
     let itemMap = new Map();
+    let boothQueueMap = new Map();
     let metricQueue = [];
     let allQueue = [];
     let currentItemId = null;
+    let currentAssetIndex = 0;
     let currentQueue = [];
     let currentQueueIndex = -1;
     let currentModeLabel = "单项预览";
     let autoAdvanceTimer = null;
-    let currentObjectUrl = null;
+    let currentSourceMode = "cloud";
+    let catalogFilterMode = "all";
+    let localAssetMap = new Map();
+    const imagePreloadCache = new Map();
+    const videoPreloadElementCache = new Map();
+    const maxVideoPreloadCount = 5;
+    const mediaSourceCache = new Map();
+    const assetLoadPromiseCache = new Map();
+    const assetWarmPromiseCache = new Map();
     let activeRenderToken = 0;
-
-    function getTypeLabel(type) {
-      if (type === "video") return "视频";
-      if (type === "image") return "图片";
-      return "占位";
-    }
+    let activeClipRange = null;
+    let clipRangeHandled = false;
 
     function setScanStatus(message) {
       scanStatusEl.textContent = message;
     }
 
     function normalizePath(path) {
-      return path.replace(/\\/g, "/").replace(/^\.?\//, "");
+      return String(path || "").replace(/\\/g, "/").replace(/^\.?\//, "");
+    }
+
+    function normalizeSelectedRelativePath(path) {
+      const normalized = normalizePath(path);
+      if (!normalized) {
+        return "";
+      }
+
+      const segments = normalized.split("/").filter(Boolean);
+      if (!segments.length) {
+        return "";
+      }
+
+      const anchorIndex = segments.findIndex((segment) => {
+        if (segment === "机房") {
+          return true;
+        }
+
+        if (/^指标\d+\.\d+$/.test(segment)) {
+          return true;
+        }
+
+        return segment.includes("平台首页");
+      });
+
+      if (anchorIndex >= 0) {
+        return segments.slice(anchorIndex).join("/");
+      }
+
+      return normalized;
     }
 
     function getFileName(path) {
@@ -537,128 +1343,217 @@
     }
 
     function naturalCompare(left, right) {
-      return left.localeCompare(right, "zh-Hans-CN", {
+      return String(left || "").localeCompare(String(right || ""), "zh-Hans-CN", {
         numeric: true,
         sensitivity: "base"
       });
     }
 
-    function slugify(value) {
-      return value
-        .toLowerCase()
-        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
-        .replace(/^-+|-+$/g, "") || "item";
+    function getTypeLabel(type) {
+      if (type === "video") return "视频";
+      if (type === "image") return "图片";
+      return "占位";
     }
 
-    function createPlaceholderItem(section) {
-      return {
-        id: `${section.id}-placeholder`,
-        title: "待上传素材",
-        type: "placeholder",
-        description: `${section.title} 当前目录为空。后续上传素材后，点击“自动重新扫描目录”即可刷新。`,
-        sectionId: section.id,
-        sectionTitle: section.title
-      };
-    }
-
-    function createSectionFromMeta(meta) {
-      return {
-        id: meta.id,
-        title: meta.title,
-        group: meta.group,
-        pathKey: meta.pathKey,
-        order: meta.order,
-        items: []
-      };
-    }
-
-    function detectSectionMeta(path) {
-      const parts = normalizePath(path).split("/");
-      if (parts[0] === "机房" && parts.length >= 2) {
-        const pathKey = `机房/${parts[1]}`;
-        return expectedSectionMap.get(pathKey) || {
-          id: `room-${slugify(parts[1])}`,
-          title: `机房 / ${parts[1]}`,
-          group: "room",
-          pathKey,
-          order: 900
+    function toEntryObject(value) {
+      if (typeof value === "string") {
+        return {
+          relativePath: normalizePath(value),
+          title: getFileTitle(value),
+          type: inferType(value),
+          handle: null
         };
       }
 
-      const pathKey = parts[0];
-      if (expectedSectionMap.has(pathKey)) {
-        return expectedSectionMap.get(pathKey);
-      }
-
       return {
-        id: `auto-${slugify(pathKey)}`,
-        title: pathKey.startsWith("指标") ? pathKey.replace(/^指标(\d+\.\d+)$/, "指标 $1") : pathKey,
-        group: pathKey.startsWith("指标") ? "metric" : "room",
-        pathKey,
-        order: 950
+        relativePath: normalizePath(value.relativePath || value.path),
+        title: value.title || getFileTitle(value.relativePath || value.path),
+        type: value.type || inferType(value.relativePath || value.path),
+        handle: value.handle || null,
+        file: value.file || null
       };
     }
 
-    function buildSectionsFromEntries(entries) {
-      const sectionStore = new Map(expectedSections.map((meta) => [meta.pathKey, createSectionFromMeta(meta)]));
-
-      entries.forEach((entry) => {
-        const type = entry.type || inferType(entry.path);
-        if (!type) {
-          return;
+    function uniqueAssets(assets) {
+      const seen = new Set();
+      return assets.filter((asset) => {
+        const key = asset.relativePath || asset.title;
+        if (seen.has(key)) {
+          return false;
         }
+        seen.add(key);
+        return true;
+      });
+    }
 
-        const relativePath = normalizePath(entry.path);
-        const meta = detectSectionMeta(relativePath);
-        if (!sectionStore.has(meta.pathKey)) {
-          sectionStore.set(meta.pathKey, createSectionFromMeta(meta));
-        }
+    function sortAssets(assets) {
+      return [...assets].sort((left, right) => naturalCompare(left.relativePath, right.relativePath));
+    }
 
-        const section = sectionStore.get(meta.pathKey);
-        section.items.push({
-          id: `item-${slugify(relativePath)}`,
-          title: entry.title || getFileTitle(relativePath),
-          type,
-          relativePath,
-          handle: entry.handle || null,
-          sectionId: section.id,
-          sectionTitle: section.title
+    function entryMatchesCandidate(entry, candidate) {
+      const relativePath = normalizePath(entry.relativePath);
+      const lowerPath = relativePath.toLowerCase();
+
+      if (candidate.pathPrefix && !relativePath.startsWith(candidate.pathPrefix)) {
+        return false;
+      }
+
+      if (candidate.includes && !candidate.includes.every((token) => lowerPath.includes(String(token).toLowerCase()))) {
+        return false;
+      }
+
+      if (candidate.excludes && candidate.excludes.some((token) => lowerPath.includes(String(token).toLowerCase()))) {
+        return false;
+      }
+
+      return true;
+    }
+
+    function resolveAssetsForBlueprint(blueprint, entries, resolvedItems) {
+      if (blueprint.sharedFrom) {
+        const sharedItem = resolvedItems.get(blueprint.sharedFrom);
+        return sharedItem ? sharedItem.assets : [];
+      }
+
+      if (!blueprint.matcher) {
+        return [];
+      }
+
+      if (blueprint.matcher.mode === "multi") {
+        const matchedAssets = [];
+        const prefixes = blueprint.matcher.folderPrefixes || [];
+
+        prefixes.forEach((prefix) => {
+          entries.forEach((entry) => {
+            if (normalizePath(entry.relativePath).startsWith(prefix)) {
+              matchedAssets.push(entry);
+            }
+          });
         });
+
+        return sortAssets(uniqueAssets(matchedAssets));
+      }
+
+      const candidates = blueprint.matcher.candidates || [];
+      for (const candidate of candidates) {
+        const matches = sortAssets(entries.filter((entry) => entryMatchesCandidate(entry, candidate)));
+        if (matches.length) {
+          return [matches[0]];
+        }
+      }
+
+      return [];
+    }
+
+    function buildItemMeta(item) {
+      const pieces = [item.place].filter(Boolean);
+      if (item.assets.length > 1) {
+        pieces.push(`${item.assets.length} 个素材`);
+      }
+      return pieces.join(" · ");
+    }
+
+    function buildPlayerMeta(item) {
+      const pieces = [item.sectionSubtitle, item.place].filter(Boolean);
+      return pieces.join(" · ") || "请选择左侧目录项";
+    }
+
+    function createPlaceholderText(item) {
+      const base = item.assets.length ? "当前素材不可播放。" : "当前条目尚未匹配到素材。";
+      return `${base} 后续可点击“自动重新扫描目录”刷新。`;
+    }
+
+    function getBoothKeyForSection(section) {
+      if (!section) {
+        return "booth-unknown";
+      }
+
+      if (section.id === "sec-home") {
+        return "booth-home";
+      }
+
+      if (section.id === "sec-room") {
+        return "booth-room";
+      }
+
+      const match = String(section.title || "").match(/^展台\s*(\d+)/);
+      if (match) {
+        return `booth-${match[1]}`;
+      }
+
+      return `booth-${section.id}`;
+    }
+
+    function buildSectionsFromEntries(rawEntries) {
+      const entries = rawEntries
+        .map(toEntryObject)
+        .filter((entry) => entry.type)
+        .sort((left, right) => naturalCompare(left.relativePath, right.relativePath));
+
+      const resolvedItems = new Map();
+      const sectionStore = new Map(
+        sectionBlueprints.map((section) => [section.id, { ...section, items: [] }])
+      );
+
+      itemBlueprints.forEach((blueprint) => {
+        const section = sectionStore.get(blueprint.sectionId);
+        const assets = resolveAssetsForBlueprint(blueprint, entries, resolvedItems);
+        const item = {
+          ...blueprint,
+          sectionTitle: section.title,
+          sectionSubtitle: section.subtitle,
+          assets,
+          highlighted: highlightedItemIds.has(blueprint.id)
+        };
+        resolvedItems.set(item.id, item);
+        if (!blueprint.hidden) {
+          section.items.push(item);
+        }
       });
 
-      return Array.from(sectionStore.values())
-        .sort((left, right) => {
-          if (left.order !== right.order) {
-            return left.order - right.order;
-          }
-          return naturalCompare(left.title, right.title);
-        })
-        .map((section) => {
-          section.items.sort((left, right) => naturalCompare(left.title, right.title));
-          if (!section.items.length) {
-            section.items.push(createPlaceholderItem(section));
-          }
-          return section;
-        });
+      return sectionBlueprints.map((section) => sectionStore.get(section.id));
     }
 
     function rebuildState(nextSections) {
       sections = nextSections;
       sectionMap = new Map(sections.map((section) => [section.id, section]));
       itemMap = new Map();
+      const boothOrder = [];
+      const boothStore = new Map();
 
       sections.forEach((section, sectionIndex) => {
+        const boothKey = getBoothKeyForSection(section);
+        if (!boothStore.has(boothKey)) {
+          boothStore.set(boothKey, []);
+          boothOrder.push(boothKey);
+        }
+
         section.items.forEach((item, itemIndex) => {
           item.order = sectionIndex * 100 + itemIndex;
           itemMap.set(item.id, item);
+          boothStore.get(boothKey).push(item.id);
         });
       });
+
+      boothQueueMap = new Map(boothOrder.map((boothKey) => [boothKey, boothStore.get(boothKey)]));
 
       metricQueue = sections
         .filter((section) => section.group === "metric")
         .flatMap((section) => section.items.map((item) => item.id));
 
       allQueue = sections.flatMap((section) => section.items.map((item) => item.id));
+    }
+
+    function getCurrentItem() {
+      return currentItemId ? itemMap.get(currentItemId) : null;
+    }
+
+    function getActiveAsset(item = getCurrentItem()) {
+      if (!item || !item.assets.length) {
+        return null;
+      }
+
+      return item.assets[Math.min(currentAssetIndex, item.assets.length - 1)];
     }
 
     function clearAutoAdvanceTimer() {
@@ -668,11 +1563,34 @@
       }
     }
 
-    function clearCurrentObjectUrl() {
-      if (currentObjectUrl) {
-        URL.revokeObjectURL(currentObjectUrl);
-        currentObjectUrl = null;
-      }
+    function releaseCurrentObjectUrl() {
+      // Media source lifecycle is managed by mediaSourceCache and clearObjectUrlCache.
+    }
+
+    function clearObjectUrlCache() {
+      videoPreloadElementCache.forEach((video) => {
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+        if (video.parentNode) {
+          video.parentNode.removeChild(video);
+        }
+      });
+      videoPreloadElementCache.clear();
+      imagePreloadCache.clear();
+
+      mediaSourceCache.forEach((url) => {
+        if (typeof url === "string" && url.startsWith("blob:")) {
+          URL.revokeObjectURL(url);
+        }
+      });
+      mediaSourceCache.clear();
+      assetLoadPromiseCache.clear();
+      assetWarmPromiseCache.clear();
+    }
+
+    function getAssetCacheKey(asset) {
+      return normalizePath(asset.relativePath || asset.title || "");
     }
 
     function setVisibility(target) {
@@ -687,12 +1605,51 @@
       });
     }
 
+    function updateFilterButtonState() {
+      const mappings = [
+        ["filterAllBtn", "all"],
+        ["filterBoothBtn", "booth"],
+        ["filterMetricBtn", "metric"]
+      ];
+
+      mappings.forEach(([id, mode]) => {
+        const button = document.getElementById(id);
+        if (!button) {
+          return;
+        }
+        button.classList.toggle("active-filter", catalogFilterMode === mode);
+      });
+    }
+
+    function scrollActiveItemIntoView() {
+      if (!currentItemId) {
+        return;
+      }
+
+      const activeButton = catalogEl.querySelector(`.item-button[data-item-id="${currentItemId}"]`);
+      if (!activeButton) {
+        return;
+      }
+
+      activeButton.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest"
+      });
+    }
+
     function updateQueueInfo() {
-      const activeItem = currentItemId ? itemMap.get(currentItemId) : null;
-      modeInfoEl.innerHTML = `<strong>当前模式：</strong>${currentModeLabel}`;
+      const activeItem = getCurrentItem();
+      const assetLabel = activeItem && activeItem.assets.length > 1
+        ? ` · 素材 ${currentAssetIndex + 1}/${activeItem.assets.length}`
+        : "";
+
+      modeInfoEl.innerHTML = `<strong>当前模式：</strong>${currentModeLabel} · <strong>素材来源：</strong>${getSourceModeLabel()}`;
 
       if (!currentQueue.length) {
-        queueInfoEl.innerHTML = "<strong>轮播状态：</strong>未启动";
+        queueInfoEl.innerHTML = activeItem
+          ? `<strong>轮播状态：</strong>单项预览 · 当前项：${activeItem.title}${assetLabel}`
+          : "<strong>轮播状态：</strong>未启动";
         return;
       }
 
@@ -700,7 +1657,7 @@
       const currentNumber = currentQueueIndex + 1;
       const queueSize = currentQueue.length;
       const activeTitle = activeItem ? activeItem.title : "未选择";
-      queueInfoEl.innerHTML = `<strong>轮播状态：</strong>${currentNumber} / ${queueSize} · ${loopText} · 当前项：${activeTitle}`;
+      queueInfoEl.innerHTML = `<strong>轮播状态：</strong>${currentNumber} / ${queueSize} · ${loopText} · 当前项：${activeTitle}${assetLabel}`;
     }
 
     function scheduleAutoAdvance(item) {
@@ -709,78 +1666,367 @@
         return;
       }
 
-      if (item.type === "image" || item.type === "placeholder") {
+      const asset = getActiveAsset(item);
+      if (!asset || asset.type === "image") {
         autoAdvanceTimer = window.setTimeout(() => {
           playNext(true);
         }, placeholderDurationMs);
       }
     }
 
-    async function resolveMediaSource(item) {
-      if (item.handle) {
-        const file = await item.handle.getFile();
-        currentObjectUrl = URL.createObjectURL(file);
-        return currentObjectUrl;
-      }
-
-      return encodeURI(item.relativePath);
+    function resetVideoElement() {
+      activeClipRange = null;
+      clipRangeHandled = false;
+      videoEl.pause();
+      videoEl.removeAttribute("src");
+      videoEl.src = "";
+      videoEl.load();
     }
 
-    async function showItem(item, autoplay) {
+    function getItemClipRange(item) {
+      if (!item) {
+        return null;
+      }
+
+      const hasClipStart = Number.isFinite(item.clipStartSeconds);
+      const hasClipEnd = Number.isFinite(item.clipEndSeconds);
+      if (!hasClipStart && !hasClipEnd) {
+        return null;
+      }
+
+      return {
+        start: hasClipStart ? item.clipStartSeconds : 0,
+        end: hasClipEnd ? item.clipEndSeconds : null
+      };
+    }
+
+    function getSourceModeLabel(mode = currentSourceMode) {
+      return mode === "local" ? "本地视频" : "云端视频";
+    }
+
+    function syncSourceModeControl() {
+      sourceModeToggleEl.checked = currentSourceMode === "local";
+      sourceModeLabelEl.textContent = currentSourceMode === "local" ? "使用本地视频" : "使用云端视频";
+      modeInfoEl.innerHTML = `<strong>当前模式：</strong>${currentModeLabel} · <strong>素材来源：</strong>${getSourceModeLabel()}`;
+    }
+
+    function getSourceAwareAssetKey(asset, mode = currentSourceMode) {
+      return `${mode}:${normalizePath(asset.relativePath || asset.title || "")}`;
+    }
+
+    function trimVideoPreloadCache() {
+      while (videoPreloadElementCache.size > maxVideoPreloadCount) {
+        const firstKey = videoPreloadElementCache.keys().next().value;
+        const evictedVideo = videoPreloadElementCache.get(firstKey);
+        if (evictedVideo) {
+          evictedVideo.pause();
+          evictedVideo.removeAttribute("src");
+          evictedVideo.load();
+          if (evictedVideo.parentNode) {
+            evictedVideo.parentNode.removeChild(evictedVideo);
+          }
+        }
+        videoPreloadElementCache.delete(firstKey);
+      }
+    }
+
+    function primeVideoPipeline(cacheKey, sourceUrl) {
+      let preloadVideo = videoPreloadElementCache.get(cacheKey);
+
+      if (!preloadVideo) {
+        preloadVideo = document.createElement("video");
+        preloadVideo.preload = "auto";
+        preloadVideo.muted = true;
+        preloadVideo.playsInline = true;
+        preloadVideo.style.display = "none";
+        document.body.appendChild(preloadVideo);
+      }
+
+      if (preloadVideo.dataset.src !== sourceUrl) {
+        preloadVideo.dataset.src = sourceUrl;
+        preloadVideo.src = sourceUrl;
+        preloadVideo.load();
+      }
+
+      videoPreloadElementCache.delete(cacheKey);
+      videoPreloadElementCache.set(cacheKey, preloadVideo);
+      trimVideoPreloadCache();
+    }
+
+    async function primeAssetForPlayback(asset) {
+      const sourceUrl = await resolveMediaSource(asset);
+      const cacheKey = getSourceAwareAssetKey(asset);
+
+      if (asset.type === "video") {
+        primeVideoPipeline(cacheKey, sourceUrl);
+        return;
+      }
+
+      if (asset.type === "image") {
+        if (imagePreloadCache.has(cacheKey)) {
+          return;
+        }
+        const preloadImage = new Image();
+        preloadImage.src = sourceUrl;
+        imagePreloadCache.set(cacheKey, preloadImage);
+      }
+    }
+
+    function warmHttpAssetCache(asset, sourceUrl) {
+      if (!asset || asset.file || asset.handle) {
+        return;
+      }
+
+      const cacheKey = getSourceAwareAssetKey(asset, "cloud");
+      if (assetWarmPromiseCache.has(cacheKey)) {
+        return;
+      }
+
+      const pending = fetch(sourceUrl, { cache: "force-cache" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`素材缓存预热失败: ${response.status}`);
+          }
+        })
+        .catch(() => {
+          // Ignore warm-up failures to avoid interrupting playback.
+        })
+        .finally(() => {
+          assetWarmPromiseCache.delete(cacheKey);
+        });
+
+      assetWarmPromiseCache.set(cacheKey, pending);
+    }
+
+    async function resolveMediaSource(asset) {
+      const cacheKey = getSourceAwareAssetKey(asset);
+
+      if (mediaSourceCache.has(cacheKey)) {
+        return mediaSourceCache.get(cacheKey);
+      }
+
+      if (assetLoadPromiseCache.has(cacheKey)) {
+        return assetLoadPromiseCache.get(cacheKey);
+      }
+
+      const pending = (async () => {
+        let sourceUrl;
+        const localAsset = currentSourceMode === "local" ? localAssetMap.get(normalizePath(asset.relativePath || asset.title || "")) : null;
+
+        if (localAsset && localAsset.file) {
+          sourceUrl = URL.createObjectURL(localAsset.file);
+        } else if (localAsset && localAsset.handle) {
+          const file = await localAsset.handle.getFile();
+          sourceUrl = URL.createObjectURL(file);
+        } else if (asset.file) {
+          sourceUrl = URL.createObjectURL(asset.file);
+        } else if (asset.handle) {
+          const file = await asset.handle.getFile();
+          sourceUrl = URL.createObjectURL(file);
+        } else {
+          sourceUrl = encodeURI(asset.relativePath);
+          warmHttpAssetCache(asset, sourceUrl);
+        }
+
+        mediaSourceCache.set(cacheKey, sourceUrl);
+        return sourceUrl;
+      })().finally(() => {
+        assetLoadPromiseCache.delete(cacheKey);
+      });
+
+      assetLoadPromiseCache.set(cacheKey, pending);
+      return pending;
+    }
+
+    function getUpcomingAssets(limit = 2) {
+      const upcoming = [];
+      const activeItem = getCurrentItem();
+      if (!activeItem) {
+        return upcoming;
+      }
+
+      for (let index = currentAssetIndex + 1; index < activeItem.assets.length && upcoming.length < limit; index += 1) {
+        upcoming.push(activeItem.assets[index]);
+      }
+
+      if (upcoming.length >= limit) {
+        return upcoming;
+      }
+
+      const baseQueue = currentQueue.length ? currentQueue : getCurrentSectionQueue();
+      if (!baseQueue.length || !currentItemId) {
+        return upcoming;
+      }
+
+      const queueIndex = baseQueue.indexOf(currentItemId);
+      if (queueIndex < 0) {
+        return upcoming;
+      }
+
+      let cursor = queueIndex + 1;
+      while (upcoming.length < limit) {
+        if (cursor >= baseQueue.length) {
+          if (!currentQueue.length || !loopToggleEl.checked) {
+            break;
+          }
+          cursor = 0;
+        }
+
+        if (cursor === queueIndex) {
+          break;
+        }
+
+        const nextItem = itemMap.get(baseQueue[cursor]);
+        if (nextItem && nextItem.assets.length) {
+          upcoming.push(nextItem.assets[0]);
+        }
+
+        cursor += 1;
+      }
+
+      return upcoming;
+    }
+
+    function preloadUpcomingAssets(limit = 2) {
+      const upcomingAssets = getUpcomingAssets(limit);
+      upcomingAssets.forEach((asset) => {
+        primeAssetForPlayback(asset).catch(() => {});
+      });
+    }
+
+    function handleMediaLoadError(item) {
+      setVisibility("placeholder");
+      videoEl.pause();
+      videoEl.removeAttribute("src");
+      videoEl.load();
+      imageEl.removeAttribute("src");
+      placeholderTitleEl.textContent = item.title;
+      placeholderDescEl.textContent = "当前素材加载失败，请稍后重试或检查文件路径。";
+      mediaPathEl.textContent = `${buildPlayerMeta(item)} · 当前素材暂不可播放`;
+      updateQueueInfo();
+
+      if (currentQueue.length) {
+        clearAutoAdvanceTimer();
+        autoAdvanceTimer = window.setTimeout(() => {
+          playNext(true);
+        }, 1500);
+      }
+    }
+
+    async function showItem(item, autoplay, assetIndex = 0) {
       if (!item) {
         return;
       }
 
+      const previousItemId = currentItemId;
       clearAutoAdvanceTimer();
-      clearCurrentObjectUrl();
+      releaseCurrentObjectUrl();
       const renderToken = ++activeRenderToken;
-      currentItemId = item.id;
-      mediaBadgeEl.textContent = `${getTypeLabel(item.type)} · ${item.sectionTitle}`;
-      mediaTitleEl.textContent = item.title;
-      mediaPathEl.textContent = item.relativePath || item.description || "占位项";
 
-      if (item.type === "video") {
+      currentItemId = item.id;
+      currentAssetIndex = Math.max(0, Math.min(assetIndex, Math.max(item.assets.length - 1, 0)));
+
+      if (catalogFilterMode !== "all" && previousItemId !== currentItemId) {
+        renderCatalog();
+      }
+
+      const activeAsset = getActiveAsset(item);
+      const badgeSuffix = item.assets.length > 1 ? ` ${currentAssetIndex + 1}/${item.assets.length}` : "";
+
+      mediaBadgeEl.textContent = `${getTypeLabel(activeAsset ? activeAsset.type : "placeholder")}${badgeSuffix} · ${item.sectionTitle}`;
+      mediaTitleEl.textContent = item.title;
+      mediaPathEl.textContent = buildPlayerMeta(item);
+
+      if (!activeAsset) {
+        setVisibility("placeholder");
+        resetVideoElement();
+        imageEl.removeAttribute("src");
+        placeholderTitleEl.textContent = item.title;
+        placeholderDescEl.textContent = createPlaceholderText(item);
+        updateActiveState();
+        if (previousItemId !== currentItemId) {
+          scrollActiveItemIntoView();
+        }
+        updateQueueInfo();
+        scheduleAutoAdvance(item);
+        return;
+      }
+
+      if (activeAsset.type === "video") {
         setVisibility("video");
         imageEl.removeAttribute("src");
         placeholderTitleEl.textContent = "待补充素材";
         placeholderDescEl.textContent = "";
-        videoEl.pause();
-        const src = await resolveMediaSource(item);
+        resetVideoElement();
+        activeClipRange = getItemClipRange(item);
+        clipRangeHandled = false;
+        let src;
+        try {
+          src = await resolveMediaSource(activeAsset);
+        } catch (error) {
+          if (renderToken !== activeRenderToken) {
+            return;
+          }
+          handleMediaLoadError(item);
+          return;
+        }
         if (renderToken !== activeRenderToken) {
-          clearCurrentObjectUrl();
+          releaseCurrentObjectUrl();
           return;
         }
         videoEl.src = src;
         videoEl.load();
-        if (autoplay) {
-          videoEl.play().catch(() => {
-            mediaPathEl.textContent = `${item.relativePath}（浏览器拦截了自动播放，请点一下播放按钮）`;
-          });
+        const applyClipAndAutoplay = () => {
+          if (renderToken !== activeRenderToken) {
+            return;
+          }
+
+          if (activeClipRange && Number.isFinite(activeClipRange.start) && videoEl.duration) {
+            const safeStart = Math.min(activeClipRange.start, Math.max(videoEl.duration - 0.1, 0));
+            if (Math.abs(videoEl.currentTime - safeStart) > 0.2) {
+              videoEl.currentTime = safeStart;
+            }
+          }
+
+          if (autoplay) {
+            videoEl.play().catch(() => {
+              mediaPathEl.textContent = `${buildPlayerMeta(item)} · 浏览器拦截了自动播放，请手动点击播放`;
+            });
+          }
+        };
+
+        if (videoEl.readyState >= 1) {
+          applyClipAndAutoplay();
+        } else {
+          videoEl.addEventListener("loadedmetadata", applyClipAndAutoplay, { once: true });
         }
-      } else if (item.type === "image") {
+      } else {
         setVisibility("image");
-        videoEl.pause();
-        videoEl.removeAttribute("src");
-        videoEl.load();
-        const src = await resolveMediaSource(item);
+        resetVideoElement();
+        let src;
+        try {
+          src = await resolveMediaSource(activeAsset);
+        } catch (error) {
+          if (renderToken !== activeRenderToken) {
+            return;
+          }
+          handleMediaLoadError(item);
+          return;
+        }
         if (renderToken !== activeRenderToken) {
-          clearCurrentObjectUrl();
+          releaseCurrentObjectUrl();
           return;
         }
         imageEl.src = src;
-      } else {
-        setVisibility("placeholder");
-        videoEl.pause();
-        videoEl.removeAttribute("src");
-        videoEl.load();
-        imageEl.removeAttribute("src");
-        placeholderTitleEl.textContent = item.title;
-        placeholderDescEl.textContent = item.description || "当前素材尚未上传，先展示占位内容。";
       }
 
       updateActiveState();
+      if (previousItemId !== currentItemId) {
+        scrollActiveItemIntoView();
+      }
       updateQueueInfo();
       scheduleAutoAdvance(item);
+      preloadUpcomingAssets(4);
     }
 
     function startQueue(queue, modeLabel, preferredItemId) {
@@ -795,7 +2041,7 @@
       currentQueueIndex = preferredIndex >= 0 ? preferredIndex : 0;
 
       const item = itemMap.get(currentQueue[currentQueueIndex]);
-      showItem(item, true);
+      showItem(item, true, 0);
     }
 
     function stopQueue() {
@@ -809,18 +2055,96 @@
     function playSingle(itemId) {
       stopQueue();
       const item = itemMap.get(itemId);
-      showItem(item, false);
+      showItem(item, false, 0);
     }
 
     function getCurrentSectionQueue() {
       if (!currentItemId) {
-        const firstMetricSection = sections[0];
-        return firstMetricSection.items.map((item) => item.id);
+        const firstSection = sections[0];
+        return firstSection ? firstSection.items.map((item) => item.id) : [];
       }
 
       const activeItem = itemMap.get(currentItemId);
       const section = sectionMap.get(activeItem.sectionId);
-      return section.items.map((item) => item.id);
+      return section ? section.items.map((item) => item.id) : [];
+    }
+
+    function getCurrentBoothQueue() {
+      if (!currentItemId) {
+        const firstBooth = boothQueueMap.values().next().value;
+        return firstBooth || [];
+      }
+
+      const activeItem = itemMap.get(currentItemId);
+      if (!activeItem) {
+        const firstBooth = boothQueueMap.values().next().value;
+        return firstBooth || [];
+      }
+
+      const section = sectionMap.get(activeItem.sectionId);
+      const boothKey = getBoothKeyForSection(section);
+      return boothQueueMap.get(boothKey) || [];
+    }
+
+    function getFilteredSections() {
+      if (catalogFilterMode === "all") {
+        return sections;
+      }
+
+      const activeItem = getCurrentItem();
+      if (!activeItem) {
+        return sections;
+      }
+
+      if (catalogFilterMode === "booth") {
+        const activeSection = sectionMap.get(activeItem.sectionId);
+        const activeBoothKey = getBoothKeyForSection(activeSection);
+        return sections
+          .map((section) => ({
+            ...section,
+            items: section.items.filter(() => getBoothKeyForSection(section) === activeBoothKey)
+          }))
+          .filter((section) => section.items.length > 0);
+      }
+
+      if (catalogFilterMode === "metric") {
+        const activeSection = sectionMap.get(activeItem.sectionId);
+        if (!activeSection || activeSection.group !== "metric") {
+          return [];
+        }
+
+        return sections
+          .map((section) => ({
+            ...section,
+            items: section.id === activeSection.id ? section.items : []
+          }))
+          .filter((section) => section.items.length > 0);
+      }
+
+      return sections;
+    }
+
+    function applyCatalogFilter(mode) {
+      catalogFilterMode = mode;
+      renderCatalog();
+      updateActiveState();
+      updateFilterButtonState();
+      scrollActiveItemIntoView();
+    }
+
+    function tryAdvanceWithinItem(offset, autoplay) {
+      const item = getCurrentItem();
+      if (!item || item.assets.length <= 1) {
+        return false;
+      }
+
+      const nextAssetIndex = currentAssetIndex + offset;
+      if (nextAssetIndex < 0 || nextAssetIndex >= item.assets.length) {
+        return false;
+      }
+
+      showItem(item, autoplay, nextAssetIndex);
+      return true;
     }
 
     function stepInQueue(offset) {
@@ -841,13 +2165,17 @@
 
       if (currentQueue.length) {
         currentQueueIndex = nextIndex;
-        showItem(itemMap.get(baseQueue[nextIndex]), true);
+        showItem(itemMap.get(baseQueue[nextIndex]), true, 0);
       } else {
-        showItem(itemMap.get(baseQueue[nextIndex]), false);
+        showItem(itemMap.get(baseQueue[nextIndex]), false, 0);
       }
     }
 
     function playNext(fromAutoAdvance) {
+      if (tryAdvanceWithinItem(1, true)) {
+        return;
+      }
+
       if (!currentQueue.length) {
         stepInQueue(1);
         return;
@@ -867,30 +2195,38 @@
       }
 
       currentQueueIndex = nextIndex;
-      showItem(itemMap.get(currentQueue[currentQueueIndex]), true);
+      showItem(itemMap.get(currentQueue[currentQueueIndex]), true, 0);
     }
 
     function playPrev() {
+      if (tryAdvanceWithinItem(-1, currentQueue.length > 0)) {
+        return;
+      }
+
       if (!currentQueue.length) {
         stepInQueue(-1);
         return;
       }
 
       currentQueueIndex = currentQueueIndex <= 0 ? currentQueue.length - 1 : currentQueueIndex - 1;
-      showItem(itemMap.get(currentQueue[currentQueueIndex]), true);
+      showItem(itemMap.get(currentQueue[currentQueueIndex]), true, 0);
     }
 
     function renderCatalog() {
       const fragment = document.createDocumentFragment();
+      const visibleSections = getFilteredSections();
 
-      sections.forEach((section) => {
+      visibleSections.forEach((section) => {
         const sectionEl = document.createElement("section");
         sectionEl.className = "section";
 
         const headerEl = document.createElement("div");
         headerEl.className = "section-header";
         headerEl.innerHTML = `
-          <h3>${section.title}</h3>
+          <div class="section-heading">
+            <h3>${section.title}</h3>
+            <div class="section-subtitle">${section.subtitle}</div>
+          </div>
           <div class="section-count">${section.items.length}</div>
         `;
 
@@ -899,11 +2235,15 @@
 
         section.items.forEach((item) => {
           const itemButton = document.createElement("button");
-          itemButton.className = "item-button";
+          itemButton.className = `item-button${item.highlighted ? " highlighted" : ""}`;
           itemButton.dataset.itemId = item.id;
+          const meta = buildItemMeta(item);
           itemButton.innerHTML = `
-            <div class="item-title">${item.title}</div>
-            <div class="item-meta">${getTypeLabel(item.type)}${item.relativePath ? " · " + item.relativePath : ""}</div>
+            <div class="item-title-row">
+              <div class="item-title">${item.title}</div>
+              ${item.highlighted ? '<span class="item-badge">推荐</span>' : ""}
+            </div>
+            ${meta ? `<div class="item-meta">${meta}</div>` : ""}
           `;
           itemButton.addEventListener("click", () => {
             playSingle(item.id);
@@ -917,17 +2257,13 @@
       });
 
       catalogEl.replaceChildren(fragment);
+      updateFilterButtonState();
     }
 
     function buildInitialCatalog() {
-      const entries = initialEntries.map((path) => ({
-        path: path,
-        title: getFileTitle(path),
-        type: inferType(path)
-      }));
-
-      rebuildState(buildSectionsFromEntries(entries));
+      rebuildState(buildSectionsFromEntries(initialEntries));
       renderCatalog();
+      syncSourceModeControl();
     }
 
     async function collectEntries(directoryHandle, parentSegments = []) {
@@ -948,14 +2284,14 @@
           continue;
         }
 
-        const relativePath = [...parentSegments, handle.name].join("/");
+        const relativePath = normalizeSelectedRelativePath([...parentSegments, handle.name].join("/"));
         const type = inferType(relativePath);
         if (!type) {
           continue;
         }
 
         entries.push({
-          path: relativePath,
+          relativePath,
           title: getFileTitle(relativePath),
           type,
           handle
@@ -965,36 +2301,109 @@
       return entries;
     }
 
-    async function scanDirectory() {
+    function collectEntriesFromFileList(fileList) {
+      const entries = [];
+
+      Array.from(fileList).forEach((file) => {
+        const rawPath = normalizePath(file.webkitRelativePath || file.name);
+        if (!rawPath || getFileName(rawPath).startsWith(".")) {
+          return;
+        }
+
+        const relativePath = normalizeSelectedRelativePath(rawPath);
+        if (!relativePath || getFileName(relativePath) === "index.html") {
+          return;
+        }
+
+        const type = inferType(relativePath);
+        if (!type) {
+          return;
+        }
+
+        entries.push({
+          relativePath,
+          title: getFileTitle(relativePath),
+          type,
+          file
+        });
+      });
+
+      return entries;
+    }
+
+    function applyEntries(entries, successMessage) {
+      stopQueue();
+      releaseCurrentObjectUrl();
+      clearObjectUrlCache();
+      localAssetMap = new Map(entries.map((entry) => [normalizePath(entry.relativePath || entry.title || ""), entry]));
+      rebuildState(buildSectionsFromEntries([...initialEntries, ...entries]));
+      renderCatalog();
+      currentSourceMode = "local";
+      currentItemId = null;
+      currentAssetIndex = 0;
+      syncSourceModeControl();
+      updateActiveState();
+      updateQueueInfo();
+      setScanStatus(successMessage);
+
+      const preferredItemId = allQueue.includes("item-home") ? "item-home" : allQueue[0];
+      if (preferredItemId) {
+        showItem(itemMap.get(preferredItemId), false, 0);
+      }
+    }
+
+    async function scanDirectoryWithPicker() {
       if (!window.showDirectoryPicker) {
-        setScanStatus("当前浏览器不支持目录扫描。请使用最新版 Chrome 或 Edge 打开该页面。");
+        setScanStatus("当前浏览器不支持目录选择，请改用 Chrome、Edge 或 Safari。");
         return;
       }
 
       try {
-        setScanStatus("正在扫描目录，请稍候...");
+        setScanStatus("正在读取本地目录，请稍候...");
         const directoryHandle = await window.showDirectoryPicker({ mode: "read" });
         const entries = await collectEntries(directoryHandle);
-        stopQueue();
-        clearCurrentObjectUrl();
-        currentItemId = null;
-        rebuildState(buildSectionsFromEntries(entries));
-        renderCatalog();
-        updateActiveState();
-        updateQueueInfo();
-        setScanStatus(`扫描完成：识别到 ${entries.length} 个素材，目录已刷新。后续新增文件时可再次点击本按钮重扫。`);
+        applyEntries(entries, `本地目录已加载：识别到 ${entries.length} 个素材，目录已按腾讯文档清单刷新。`);
       } catch (error) {
         if (error && error.name === "AbortError") {
-          setScanStatus("已取消扫描。当前目录列表保持不变。");
+          setScanStatus("已取消选择本地目录。当前目录列表保持不变。");
           return;
         }
-        setScanStatus(`扫描失败：${error.message || "请重试"}`);
+        setScanStatus(`读取本地目录失败：${error.message || "请重试"}`);
       }
+    }
+
+    function openDirectoryInput() {
+      directoryInputEl.value = "";
+      directoryInputEl.click();
+    }
+
+    function chooseLocalDirectory() {
+      const supportsDirectoryInput = directoryInputEl.webkitdirectory !== undefined || directoryInputEl.directory !== undefined;
+      if (supportsDirectoryInput) {
+        openDirectoryInput();
+        return;
+      }
+
+      scanDirectoryWithPicker();
+    }
+
+    function openSettingsModal() {
+      settingsModalEl.classList.add("open");
+    }
+
+    function closeSettingsModal() {
+      settingsModalEl.classList.remove("open");
     }
 
     document.getElementById("playSectionBtn").addEventListener("click", () => {
       const queue = getCurrentSectionQueue();
       startQueue(queue, "当前目录轮播", currentItemId);
+    });
+
+    document.getElementById("playBoothBtn").addEventListener("click", () => {
+      const queue = getCurrentBoothQueue();
+      const preferredItem = currentItemId && queue.includes(currentItemId) ? currentItemId : queue[0];
+      startQueue(queue, "同展台轮播", preferredItem);
     });
 
     document.getElementById("playMetricsBtn").addEventListener("click", () => {
@@ -1012,7 +2421,71 @@
     });
 
     document.getElementById("scanBtn").addEventListener("click", () => {
-      scanDirectory();
+      chooseLocalDirectory();
+    });
+
+    sourceModeToggleEl.addEventListener("change", () => {
+      currentSourceMode = sourceModeToggleEl.checked ? "local" : "cloud";
+      syncSourceModeControl();
+      clearObjectUrlCache();
+
+      const activeItem = getCurrentItem() || itemMap.get(currentItemId) || itemMap.get(allQueue[0]);
+      if (activeItem) {
+        showItem(activeItem, currentQueue.length > 0, currentAssetIndex);
+      }
+
+      setScanStatus(currentSourceMode === "local"
+        ? "已切换为本地视频源，优先使用上传素材。"
+        : "已切换为云端视频源。");
+    });
+
+    settingsBtnEl.addEventListener("click", () => {
+      openSettingsModal();
+    });
+
+    if (fullscreenBtnEl) {
+      fullscreenBtnEl.addEventListener("click", () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+
+      document.addEventListener("fullscreenchange", () => {
+        if (document.fullscreenElement) {
+          fullscreenBtnEl.title = "退出全屏";
+        } else {
+          fullscreenBtnEl.title = "全屏";
+        }
+      });
+    }
+
+    closeSettingsBtnEl.addEventListener("click", () => {
+      closeSettingsModal();
+    });
+
+    settingsModalEl.addEventListener("click", (event) => {
+      if (event.target === settingsModalEl) {
+        closeSettingsModal();
+      }
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeSettingsModal();
+      }
+    });
+
+    directoryInputEl.addEventListener("change", (event) => {
+      const files = event.target.files;
+      if (!files || !files.length) {
+        setScanStatus("未选择本地目录。当前目录列表保持不变。");
+        return;
+      }
+
+      const entries = collectEntriesFromFileList(files);
+      applyEntries(entries, `本地目录已加载：识别到 ${entries.length} 个素材，目录已按腾讯文档清单刷新。`);
     });
 
     document.getElementById("prevBtn").addEventListener("click", () => {
@@ -1024,16 +2497,18 @@
     });
 
     document.getElementById("replayBtn").addEventListener("click", () => {
-      if (!currentItemId) {
+      const item = getCurrentItem();
+      if (!item) {
         return;
       }
 
-      const item = itemMap.get(currentItemId);
-      if (item.type === "video") {
-        videoEl.currentTime = 0;
+      const asset = getActiveAsset(item);
+      if (asset && asset.type === "video") {
+        clipRangeHandled = false;
+        videoEl.currentTime = activeClipRange && Number.isFinite(activeClipRange.start) ? activeClipRange.start : 0;
         videoEl.play().catch(() => {});
       } else {
-        showItem(item, false);
+        showItem(item, false, currentAssetIndex);
       }
     });
 
@@ -1046,20 +2521,87 @@
       updateQueueInfo();
     });
 
+    document.getElementById("filterAllBtn").addEventListener("click", () => {
+      applyCatalogFilter("all");
+    });
+
+    document.getElementById("filterBoothBtn").addEventListener("click", () => {
+      if (!getCurrentItem()) {
+        window.alert("未选择视频，无法点击本按钮。");
+        return;
+      }
+      applyCatalogFilter("booth");
+    });
+
+    document.getElementById("filterMetricBtn").addEventListener("click", () => {
+      const activeItem = getCurrentItem();
+      const activeSection = activeItem ? sectionMap.get(activeItem.sectionId) : null;
+      if (!activeItem || !activeSection || activeSection.group !== "metric") {
+        window.alert("当前未选择指标条目，无法仅显示当前指标条目。");
+        return;
+      }
+      applyCatalogFilter("metric");
+    });
+
     videoEl.addEventListener("ended", () => {
       playNext(true);
     });
 
-    videoEl.addEventListener("error", () => {
-      const item = currentItemId ? itemMap.get(currentItemId) : null;
-      if (item) {
-        mediaPathEl.textContent = `${item.relativePath}（文件暂不可播放，请检查是否上传完成）`;
-        scheduleAutoAdvance(item);
+    videoEl.addEventListener("timeupdate", () => {
+      if (!activeClipRange || !Number.isFinite(activeClipRange.end) || clipRangeHandled) {
+        return;
+      }
+
+      if (videoEl.currentTime >= activeClipRange.end - 0.15) {
+        clipRangeHandled = true;
+        if (currentQueue.length) {
+          playNext(true);
+          return;
+        }
+
+        videoEl.pause();
+        videoEl.currentTime = activeClipRange.end;
       }
     });
 
-    buildInitialCatalog();
-    updateQueueInfo();
+    videoEl.addEventListener("error", () => {
+      const item = getCurrentItem();
+      if (item) {
+        mediaPathEl.textContent = `${buildPlayerMeta(item)} · 当前素材暂不可播放`;
+        clearAutoAdvanceTimer();
+        if (currentQueue.length) {
+          autoAdvanceTimer = window.setTimeout(() => {
+            playNext(true);
+          }, 1500);
+        }
+      }
+    });
+
+    window.addEventListener("beforeunload", () => {
+      clearObjectUrlCache();
+    });
+
+    async function initializePlaybackOnLoad() {
+      buildInitialCatalog();
+      updateQueueInfo();
+      syncSourceModeControl();
+
+      const homeItem = itemMap.get("item-home");
+      if (homeItem && homeItem.assets.length) {
+        try {
+          await resolveMediaSource(homeItem.assets[0]);
+        } catch (error) {
+          // Ignore preload failures and continue with default playback mode.
+        }
+      }
+
+      const preferredItemId = allQueue.includes("item-home") ? "item-home" : allQueue[0];
+      if (preferredItemId) {
+        startQueue(allQueue, "全素材轮播", preferredItemId);
+      }
+    }
+
+    initializePlaybackOnLoad();
   </script>
 </body>
 </html>
